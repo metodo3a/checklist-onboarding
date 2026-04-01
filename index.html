@@ -213,7 +213,7 @@ async function autoChangeResponsible(itemId) {
 async function autoChangeNextAction(itemId) {
   await mondayGQL(
     `mutation ($boardId: ID!, $itemId: ID!, $value: JSON!) { change_multiple_column_values(board_id: $boardId, item_id: $itemId, column_values: $value) { id } }`,
-    { boardId: String(BOARD_ID), itemId: String(itemId), value: JSON.stringify({ status_1: { label: 'Cobrar Form ou Fotos' } }) }
+    { boardId: String(BOARD_ID), itemId: String(itemId), value: JSON.stringify({ status_1: { label: 'Cobrar Form ou fotos' } }) }
   );
 }
 
