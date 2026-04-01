@@ -7,147 +7,136 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root { --bg:#fafaf9; --t1:#1a1a1a; --t2:#6b7280; --card:#fff; --bdr:rgba(120,120,120,0.12); }
-  @media(prefers-color-scheme:dark){
-    :root { --bg:#0f0f0f; --t1:#e5e5e5; --t2:#9ca3af; --card:#1a1a1a; --bdr:rgba(255,255,255,0.08); }
-  }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--t1); min-height:100vh; }
-  .mono { font-family:'JetBrains Mono',monospace; }
-  .container { max-width:640px; margin:0 auto; padding:32px 20px 80px; }
+  @media(prefers-color-scheme:dark){ :root { --bg:#0f0f0f; --t1:#e5e5e5; --t2:#9ca3af; --card:#1a1a1a; --bdr:rgba(255,255,255,0.08); } }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh}
+  .mono{font-family:'JetBrains Mono',monospace}
+  .container{max-width:640px;margin:0 auto;padding:32px 20px 80px}
+  .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+  .tabs{display:flex;gap:6px}
+  .tab{padding:7px 16px;border-radius:8px;border:1.5px solid var(--bdr);background:transparent;color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;position:relative}
+  .tab.active{border-color:var(--t1);background:var(--t1);color:var(--bg)}
+  .tab .badge{position:absolute;top:-6px;right:-6px;background:#f59e0b;color:#fff;font-size:10px;font-weight:700;width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+  .alert-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .alert-pill{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:600}
+  .alert-red{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);color:#ef4444}
+  .alert-yellow{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);color:#f59e0b}
+  .client-list{display:flex;flex-direction:column;gap:6px}
+  .client-card{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px solid var(--bdr);border-radius:10px;background:var(--card);transition:all .15s}
+  .client-card.warning{background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.35)}
+  .client-card.critical{background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.35)}
+  .urg-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;white-space:nowrap}
+  .urg-badge.warning{background:#f59e0b;color:#fff}
+  .urg-badge.critical{background:#ef4444;color:#fff}
+  .draft-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:rgba(99,102,241,0.12);color:#6366f1;white-space:nowrap}
+  .btn-chat{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--bdr);background:transparent;color:var(--t2);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .2s;font-size:16px;cursor:pointer}
+  .btn-chat:hover{background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.4);color:#6366f1}
+  .btn-start{padding:6px 14px;border-radius:8px;border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit}
+  .btn-start.new{background:#16a34a}.btn-start.draft{background:#6366f1}
+  .btn-refresh{padding:5px 12px;border-radius:8px;border:1.5px solid var(--bdr);background:transparent;color:var(--t2);cursor:pointer;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;font-family:inherit}
+  .active-header{border:1.5px solid var(--bdr);border-radius:14px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;background:var(--card)}
+  .active-header.warning{background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.35)}
+  .active-header.critical{background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.35)}
+  .section{margin-bottom:20px}
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 4px}
+  .section-label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+  .section-count{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(120,120,120,0.08);color:var(--t2)}
+  .section-count.done{background:rgba(22,163,106,0.1);color:#16a34a}
+  .check-items{display:flex;flex-direction:column;gap:6px}
+  .check-item{display:flex;align-items:flex-start;gap:12px;width:100%;padding:10px 14px;border:1.5px solid rgba(120,120,120,0.15);border-radius:10px;background:transparent;cursor:pointer;transition:all .2s;text-align:left;font-family:inherit}
+  .check-item.checked{border-color:rgba(22,163,106,0.25);background:rgba(22,163,106,0.06)}
+  .check-box{width:22px;height:22px;border-radius:6px;border:2px solid rgba(120,120,120,0.3);background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:13px;color:#fff;margin-top:1px}
+  .check-item.checked .check-box{border:none;background:#16a34a}
+  .check-text{font-size:14px;color:var(--t1);line-height:1.4;transition:all .2s}
+  .check-item.checked .check-text{color:rgba(120,120,120,0.5);text-decoration:line-through}
+  .actions{display:flex;gap:10px;margin-top:24px}
+  .btn{padding:12px 0;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;text-align:center}
+  .btn-back{flex:1;border:1.5px solid var(--bdr);background:transparent;color:var(--t2)}
+  .btn-finish{flex:2;border:none;color:#fff;font-weight:700}
+  .btn-finish.green{background:#16a34a}.btn-finish.amber{background:#f59e0b}
+  .btn-finish:disabled{opacity:0.6;cursor:wait}
+  .history-list{display:flex;flex-direction:column;gap:10px}
+  .history-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;overflow:hidden}
+  .history-card.complete{border-color:rgba(22,163,106,0.2)}
+  .history-main{padding:16px 18px;display:flex;align-items:center;gap:14px}
+  .history-main.clickable{cursor:pointer}
+  .btn-delete{width:30px;height:30px;border-radius:8px;border:1.5px solid var(--bdr);background:transparent;color:var(--t2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .history-expanded{border-top:1px solid var(--bdr);padding:12px 18px 16px;background:rgba(245,158,11,0.03)}
+  .missed-item{font-size:13px;color:var(--t2);padding:4px 0;display:flex;gap:8px;align-items:flex-start}
+  .empty{background:var(--card);border:1.5px solid var(--bdr);border-radius:14px;padding:40px;text-align:center}
+  .loading-spinner{width:24px;height:24px;border:3px solid var(--bdr);border-top-color:var(--t1);border-radius:50%;animation:spin .6s linear infinite;margin:0 auto 12px}
+  @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  .ring-text{font-size:13px;font-weight:700;fill:var(--t1)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--t1);color:var(--bg);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90%;text-align:center}
+  .toast.show{opacity:1}
 
-  .header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
-  .header-brand { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--t2); margin-bottom:4px; }
-  .header-title { font-size:22px; font-weight:700; line-height:1.2; }
-  .tabs { display:flex; gap:6px; }
-  .tab { padding:7px 16px; border-radius:8px; border:1.5px solid var(--bdr); background:transparent; color:var(--t2); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; font-family:inherit; position:relative; }
-  .tab.active { border-color:var(--t1); background:var(--t1); color:var(--bg); }
-  .tab .badge { position:absolute; top:-6px; right:-6px; background:#f59e0b; color:#fff; font-size:10px; font-weight:700; width:18px; height:18px; border-radius:9px; display:flex; align-items:center; justify-content:center; }
-
-  .alert-bar { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
-  .alert-pill { display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:8px; font-size:12px; font-weight:600; }
-  .alert-red { background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); color:#ef4444; }
-  .alert-yellow { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); color:#f59e0b; }
-
-  .list-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-  .list-title { font-size:13px; font-weight:700; color:var(--t2); text-transform:uppercase; letter-spacing:1px; }
-  .btn-refresh { padding:5px 12px; border-radius:8px; border:1.5px solid var(--bdr); background:transparent; color:var(--t2); cursor:pointer; font-size:12px; font-weight:600; display:flex; align-items:center; gap:5px; font-family:inherit; transition:all .2s; }
-  .btn-refresh:hover { border-color:var(--t1); color:var(--t1); }
-  .btn-refresh.spinning { animation:spin .8s ease; }
-  @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-
-  .client-list { display:flex; flex-direction:column; gap:6px; }
-  .client-card { display:flex; align-items:center; gap:10px; padding:12px 14px; border:1.5px solid var(--bdr); border-radius:10px; background:var(--card); transition:all .15s; }
-  .client-card.warning { background:rgba(245,158,11,0.07); border-color:rgba(245,158,11,0.35); }
-  .client-card.critical { background:rgba(239,68,68,0.07); border-color:rgba(239,68,68,0.35); }
-  .client-info { flex:1; min-width:0; }
-  .client-name { font-size:14px; font-weight:600; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-  .client-meta { font-size:11px; color:var(--t2); margin-top:3px; display:flex; flex-wrap:wrap; gap:0 8px; }
-  .urg-badge { font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px; white-space:nowrap; }
-  .urg-badge.warning { background:#f59e0b; color:#fff; }
-  .urg-badge.critical { background:#ef4444; color:#fff; }
-  .draft-badge { font-size:10px; font-weight:700; padding:2px 7px; border-radius:5px; background:rgba(99,102,241,0.12); color:#6366f1; white-space:nowrap; }
-  .client-actions { display:flex; gap:6px; flex-shrink:0; }
-  .btn-chat { width:36px; height:36px; border-radius:8px; border:1.5px solid var(--bdr); background:transparent; color:var(--t2); display:flex; align-items:center; justify-content:center; text-decoration:none; transition:all .2s; font-size:16px; cursor:pointer; }
-  .btn-chat:hover { background:rgba(99,102,241,0.08); border-color:rgba(99,102,241,0.4); color:#6366f1; }
-  .btn-start { padding:6px 14px; border-radius:8px; border:none; color:#fff; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; font-family:inherit; transition:opacity .2s; }
-  .btn-start.new { background:#16a34a; }
-  .btn-start.draft { background:#6366f1; }
-
-  .active-header { border:1.5px solid var(--bdr); border-radius:14px; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; background:var(--card); }
-  .active-header.warning { background:rgba(245,158,11,0.07); border-color:rgba(245,158,11,0.35); }
-  .active-header.critical { background:rgba(239,68,68,0.07); border-color:rgba(239,68,68,0.35); }
-
-  .section { margin-bottom:20px; }
-  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; padding:0 4px; }
-  .section-label { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; }
-  .section-count { font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px; background:rgba(120,120,120,0.08); color:var(--t2); }
-  .section-count.done { background:rgba(22,163,106,0.1); color:#16a34a; }
-
-  .check-items { display:flex; flex-direction:column; gap:6px; }
-  .check-item { display:flex; align-items:flex-start; gap:12px; width:100%; padding:10px 14px; border:1.5px solid rgba(120,120,120,0.15); border-radius:10px; background:transparent; cursor:pointer; transition:all .2s; text-align:left; font-family:inherit; }
-  .check-item.checked { border-color:rgba(22,163,106,0.25); background:rgba(22,163,106,0.06); }
-  .check-box { width:22px; height:22px; border-radius:6px; border:2px solid rgba(120,120,120,0.3); background:transparent; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .2s; font-size:13px; color:#fff; margin-top:1px; }
-  .check-item.checked .check-box { border:none; background:#16a34a; }
-  .check-text { font-size:14px; color:var(--t1); line-height:1.4; transition:all .2s; }
-  .check-item.checked .check-text { color:rgba(120,120,120,0.5); text-decoration:line-through; }
-
-  .actions { display:flex; gap:10px; margin-top:24px; }
-  .btn { padding:12px 0; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .2s; text-align:center; }
-  .btn-back { flex:1; border:1.5px solid var(--bdr); background:transparent; color:var(--t2); }
-  .btn-finish { flex:2; border:none; color:#fff; font-weight:700; }
-  .btn-finish.green { background:#16a34a; }
-  .btn-finish.amber { background:#f59e0b; }
-
-  .history-list { display:flex; flex-direction:column; gap:10px; }
-  .history-card { background:var(--card); border:1.5px solid var(--bdr); border-radius:12px; overflow:hidden; }
-  .history-card.complete { border-color:rgba(22,163,106,0.2); }
-  .history-main { padding:16px 18px; display:flex; align-items:center; gap:14px; }
-  .history-main.clickable { cursor:pointer; }
-  .history-info { flex:1; }
-  .history-name { font-size:15px; font-weight:700; }
-  .history-meta { font-size:12px; color:var(--t2); margin-top:2px; }
-  .history-status { font-size:11px; font-weight:600; margin-top:4px; }
-  .btn-delete { width:30px; height:30px; border-radius:8px; border:1.5px solid var(--bdr); background:transparent; color:var(--t2); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .history-expanded { border-top:1px solid var(--bdr); padding:12px 18px 16px; background:rgba(245,158,11,0.03); }
-  .missed-title { font-size:11px; font-weight:700; color:#f59e0b; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
-  .missed-item { font-size:13px; color:var(--t2); padding:4px 0; display:flex; gap:8px; align-items:flex-start; }
-  .missed-item .dot { color:#f59e0b; flex-shrink:0; }
-  .missed-item strong { color:var(--t1); font-weight:600; font-size:11px; }
-
-  .empty { background:var(--card); border:1.5px solid var(--bdr); border-radius:14px; padding:40px; text-align:center; }
-  .footer-note { margin-top:14px; font-size:11px; color:var(--t2); text-align:center; }
-
-  .loading { text-align:center; padding:40px; }
-  .loading-spinner { width:24px; height:24px; border:3px solid var(--bdr); border-top-color:var(--t1); border-radius:50%; animation:spin .6s linear infinite; margin:0 auto 12px; }
-  .loading-text { font-size:13px; color:var(--t2); }
-
-  .ring-text { font-size:13px; font-weight:700; fill:var(--t1); }
+  /* Automation panel */
+  .auto-panel{background:var(--card);border:1.5px solid var(--bdr);border-radius:14px;padding:20px;margin-top:20px}
+  .auto-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;color:var(--t1)}
+  .auto-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;border-bottom:1px solid var(--bdr)}
+  .auto-item:last-child{border-bottom:none}
+  .auto-check{width:18px;height:18px;border-radius:5px;border:2px solid rgba(120,120,120,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;cursor:pointer;transition:all .2s}
+  .auto-check.on{border:none;background:#16a34a;color:#fff}
+  .auto-check.off{background:transparent;color:transparent}
+  .auto-label{flex:1;color:var(--t1)}
+  .auto-status{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px}
+  .auto-status.pending{background:rgba(120,120,120,0.08);color:var(--t2)}
+  .auto-status.running{background:rgba(99,102,241,0.1);color:#6366f1}
+  .auto-status.done{background:rgba(22,163,106,0.1);color:#16a34a}
+  .auto-status.error{background:rgba(239,68,68,0.1);color:#ef4444}
 </style>
 </head>
 <body>
 
 <div class="container" id="app"></div>
+<div class="toast" id="toast"></div>
 
 <script>
 // ============================================================
-// CONFIG — Preencha com sua API key do Monday
+// CONFIG
 // ============================================================
-const MONDAY_API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjU4MTgwNTk3MSwiYWFpIjoxMSwidWlkIjozMzM2OTk1NCwiaWFkIjoiMjAyNS0xMS0wM1QxNjo1Mzo1Mi4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTIzMjEwNTMsInJnbiI6InVzZTEifQ.hu_8RkvIbe__DGXRrzWZExtxXUjPgLaQr3FJ-tBsV1E';
+const MONDAY_API_KEY = 'SEU_API_TOKEN_AQUI';
 const BOARD_ID = 3946353259;
 const ONBOARDING_GROUP = '1675800307_conta_inicial_2_01_';
+const PRODUCTION_GROUP = 'novo_grupo59646';
 const MONDAY_API = 'https://api.monday.com/v2';
 
-// ============================================================
-// CHECKLIST SECTIONS
-// ============================================================
+// User IDs
+const ALINE_ID = 58853060;
+const FELIPE_ID = 33369954;
+
+// Column IDs
+const COL_PERSON = 'person';
+const COL_NEXT_ACTION = 'status_1';
+
 const SECTIONS = [
   { key:'before', label:'Antes da Reunião', icon:'📋', items:[
-    { id:'b0', text:'Start agendado' },
-    { id:'b1', text:'Enviar mensagem para confirmar reunião' },
-    { id:'b2', text:'Verificar se foi confirmado pelo cliente' },
-    { id:'b3', text:'Estudar cliente — Solicitação de Consultor e Pré-diagnóstico. Identificar potenciais problemas e se preparar para as defesas' },
-    { id:'b4', text:'Verificar Plano contratado e forma de pagamento (Básico/Premium e se é mensal ou anual)' },
-    { id:'b5', text:'Buscar sites similares dentro da base para mostrar em chamada para cliente' },
-    { id:'b6', text:'Buscar por perfis GMN e Sites' },
-    { id:'b7', text:'Se cliente já tiver site, verificar desempenho no PageSpeed' },
-    { id:'b8', text:'Ter todas essas informações "em mãos"' },
-    { id:'b9', text:'Enviar mensagem logo antes da chamada com o link' },
+    {id:'b0',text:'Start agendado'},
+    {id:'b1',text:'Enviar mensagem para confirmar reunião'},
+    {id:'b2',text:'Verificar se foi confirmado pelo cliente'},
+    {id:'b3',text:'Estudar cliente — Solicitação de Consultor e Pré-diagnóstico. Identificar potenciais problemas e se preparar para as defesas'},
+    {id:'b4',text:'Verificar Plano contratado e forma de pagamento (Básico/Premium e se é mensal ou anual)'},
+    {id:'b5',text:'Buscar sites similares dentro da base para mostrar em chamada para cliente'},
+    {id:'b6',text:'Buscar por perfis GMN e Sites'},
+    {id:'b7',text:'Se cliente já tiver site, verificar desempenho no PageSpeed'},
+    {id:'b8',text:'Ter todas essas informações "em mãos"'},
+    {id:'b9',text:'Enviar mensagem logo antes da chamada com o link'},
   ]},
   { key:'during', label:'Durante a Reunião', icon:'🎯', items:[
-    { id:'d1', text:'Repassar ponto a ponto do roteiro de onboarding' },
-    { id:'d2', text:'Mostrar exemplos de sites' },
-    { id:'d3', text:'Alinhar sobre verba mensal investida' },
-    { id:'d4', text:'Falar sobre multa quando mensal' },
+    {id:'d1',text:'Repassar ponto a ponto do roteiro de onboarding'},
+    {id:'d2',text:'Mostrar exemplos de sites'},
+    {id:'d3',text:'Alinhar sobre verba mensal investida'},
+    {id:'d4',text:'Falar sobre multa quando mensal'},
   ]},
   { key:'after', label:'Pós Reunião', icon:'✅', items:[
-    { id:'a1', text:'Enviar msg para cliente de pós-start — Atalho /Produção 1 (Enviar Pós-Start)' },
-    { id:'a2', text:'Enviar msg no "limbo" (para o Salesbot) para time — Atalho /Pós-start no Kommo, e preencher as informações' },
-    { id:'a3', text:'Alterar Responsável no Kommo' },
-    { id:'a4', text:'Copiar mensagem do Limbo para Atualização no Monday' },
-    { id:'a5', text:'Fixar a mensagem' },
-    { id:'a6', text:'Alterar Responsável no Monday (Coluna com a foto) para Aline e Remover Felipe' },
-    { id:'a7', text:'Mudar próxima Ação para Cobrar Form ou Fotos' },
-    { id:'a8', text:'Mover cliente para Grupo Produção' },
+    {id:'a1',text:'Enviar msg para cliente de pós-start — Atalho /Produção 1 (Enviar Pós-Start)'},
+    {id:'a2',text:'Enviar msg no "limbo" (para o Salesbot) para time — Atalho /Pós-start no Kommo, e preencher as informações'},
+    {id:'a3',text:'Alterar Responsável no Kommo'},
+    {id:'a4',text:'Copiar mensagem do Limbo para Atualização no Monday'},
+    {id:'a5',text:'Fixar a mensagem'},
+    {id:'a6',text:'Alterar Responsável no Monday (Coluna com a foto) para Aline e Remover Felipe'},
+    {id:'a7',text:'Mudar próxima Ação para Cobrar Form ou Fotos'},
+    {id:'a8',text:'Mover cliente para Grupo Produção'},
   ]},
 ];
 const ALL_IDS = SECTIONS.flatMap(s => s.items.map(i => i.id));
@@ -157,109 +146,134 @@ const ALL_IDS = SECTIONS.flatMap(s => s.items.map(i => i.id));
 // ============================================================
 const HISTORY_KEY = 'm3a-onboarding-history';
 const DRAFTS_KEY = 'm3a-onboarding-drafts';
+let state = { view:'checklist', clients:[], loading:false, selectedId:null, started:false, checked:{}, history:JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'), expanded:null, automating:false, autoStatus:{} };
 
-let state = {
-  view: 'checklist',
-  clients: [],
-  loading: false,
-  selectedId: null,
-  started: false,
-  checked: {},
-  history: JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'),
-  expanded: null,
-};
+function loadAllDrafts(){try{return JSON.parse(localStorage.getItem(DRAFTS_KEY)||'{}')}catch{return{}}}
+function saveAllDrafts(d){try{localStorage.setItem(DRAFTS_KEY,JSON.stringify(d))}catch{}}
+function loadDraft(c){return loadAllDrafts()[c]||{}}
+function saveDraft(c,ch){const a=loadAllDrafts();if(Object.values(ch).some(v=>v))a[c]=ch;else delete a[c];saveAllDrafts(a)}
+function deleteDraft(c){const a=loadAllDrafts();delete a[c];saveAllDrafts(a)}
+function getDraftCount(c){const d=loadDraft(c);return ALL_IDS.filter(id=>d[id]).length}
+function saveHistoryLS(){localStorage.setItem(HISTORY_KEY,JSON.stringify(state.history))}
+function getDaysIn(c){return Math.floor((new Date()-new Date(c+'T00:00:00'))/86400000)}
+function getUrg(d){return d>=14?'critical':d>=7?'warning':'ok'}
+function fmtDate(i){return new Date(i).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
+function fmtShort(d){return new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function showToast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3000)}
 
-function loadAllDrafts() { try { return JSON.parse(localStorage.getItem(DRAFTS_KEY)||'{}'); } catch { return {}; } }
-function saveAllDrafts(d) { try { localStorage.setItem(DRAFTS_KEY, JSON.stringify(d)); } catch {} }
-function loadDraft(cid) { return loadAllDrafts()[cid] || {}; }
-function saveDraft(cid, checked) {
-  const all = loadAllDrafts();
-  if (Object.values(checked).some(v => v)) all[cid] = checked; else delete all[cid];
-  saveAllDrafts(all);
+function ringSVG(p,sz){
+  sz=sz||54;const s=4,r=(sz-s)/2,c=2*Math.PI*r,o=c-p*c,col=p===1?'#16a34a':'#f59e0b';
+  return`<svg width="${sz}" height="${sz}" style="transform:rotate(-90deg);flex-shrink:0"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="rgba(120,120,120,0.15)" stroke-width="${s}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${s}" stroke-dasharray="${c}" stroke-dashoffset="${o}" stroke-linecap="round" style="transition:stroke-dashoffset .4s,stroke .3s"/><text x="${sz/2}" y="${sz/2}" text-anchor="middle" dominant-baseline="central" class="mono ring-text" style="transform:rotate(90deg);transform-origin:center">${Math.round(p*100)}%</text></svg>`;
 }
-function deleteDraft(cid) { const all = loadAllDrafts(); delete all[cid]; saveAllDrafts(all); }
-function getDraftCount(cid) { const d = loadDraft(cid); return ALL_IDS.filter(id => d[id]).length; }
-function saveHistory() { localStorage.setItem(HISTORY_KEY, JSON.stringify(state.history)); }
 
 // ============================================================
-// MONDAY API
+// MONDAY API CALLS
 // ============================================================
+async function mondayQuery(query, variables = {}) {
+  const res = await fetch(MONDAY_API, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':MONDAY_API_KEY,'API-Version':'2024-10'},
+    body:JSON.stringify({query, variables})
+  });
+  return res.json();
+}
+
 async function fetchClients() {
-  state.loading = true;
-  render();
+  state.loading=true; render();
   try {
-    const query = `query {
-      boards(ids: [${BOARD_ID}]) {
-        groups(ids: ["${ONBOARDING_GROUP}"]) {
-          items_page(limit: 50) {
-            items {
-              id
-              name
-              created_at
-              column_values(ids: ["status_1", "numeric", "color", "texto9__1"]) {
-                id
-                text
-              }
-            }
-          }
-        }
-      }
-    }`;
-    const res = await fetch(MONDAY_API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': MONDAY_API_KEY, 'API-Version': '2024-10' },
-      body: JSON.stringify({ query })
-    });
-    const data = await res.json();
+    const data = await mondayQuery(`query { boards(ids:[${BOARD_ID}]) { groups(ids:["${ONBOARDING_GROUP}"]) { items_page(limit:50) { items { id name created_at column_values(ids:["status_1","numeric","color","texto9__1"]) { id text } } } } } }`);
     const items = data?.data?.boards?.[0]?.groups?.[0]?.items_page?.items || [];
     state.clients = items.map(item => {
-      const cols = {};
-      (item.column_values || []).forEach(c => { cols[c.id] = c.text; });
-      return {
-        id: item.id,
-        name: item.name,
-        created: item.created_at.split('T')[0],
-        nextAction: cols['status_1'] || '—',
-        value: cols['numeric'] || '—',
-        contract: cols['color'] || '—',
-        chat: cols['texto9__1'] || null,
-      };
+      const cols = {}; (item.column_values||[]).forEach(c=>{cols[c.id]=c.text});
+      return { id:item.id, name:item.name, created:item.created_at.split('T')[0], nextAction:cols.status_1||'—', value:cols.numeric||'—', chat:cols['texto9__1']||null };
+    }).sort((a,b) => {
+      const da=getDaysIn(a.created),db=getDaysIn(b.created),ua=da>=14?0:da>=7?1:2,ub=db>=14?0:db>=7?1:2;
+      return ua!==ub?ua-ub:db-da;
     });
-    // Sort by urgency
-    state.clients.sort((a, b) => {
-      const da = getDaysIn(a.created), db = getDaysIn(b.created);
-      const ua = da >= 14 ? 0 : da >= 7 ? 1 : 2;
-      const ub = db >= 14 ? 0 : db >= 7 ? 1 : 2;
-      return ua !== ub ? ua - ub : db - da;
-    });
-  } catch (err) {
-    console.error('Erro ao carregar clientes:', err);
-    state.clients = [];
-  }
-  state.loading = false;
-  render();
+  } catch(e) { console.error(e); state.clients=[]; }
+  state.loading=false; render();
 }
 
-// ============================================================
-// HELPERS
-// ============================================================
-function getDaysIn(created) { return Math.floor((new Date() - new Date(created+'T00:00:00')) / 86400000); }
-function getUrgency(d) { return d >= 14 ? 'critical' : d >= 7 ? 'warning' : 'ok'; }
-function fmtDate(iso) { return new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
-function fmtShort(d) { return new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); }
-function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+// --- AUTOMATIONS ---
+async function postUpdateAndPin(itemId, body) {
+  // 1. Create update
+  const createRes = await mondayQuery(`mutation($itemId:Int!,$body:String!){create_update(item_id:$itemId,body:$body){id}}`, {itemId:Number(itemId), body});
+  const updateId = createRes?.data?.create_update?.id;
+  if (!updateId) throw new Error('Falha ao criar atualização');
+  // 2. Pin update
+  await mondayQuery(`mutation($updateId:Int!){pin_to_top(id:$updateId){id}}`, {updateId:Number(updateId)});
+  return updateId;
+}
 
-function ringSVG(progress, size) {
-  size = size || 54;
-  const s=4, r=(size-s)/2, c=2*Math.PI*r, o=c-progress*c;
-  const color = progress===1 ? '#16a34a' : '#f59e0b';
-  return `<svg width="${size}" height="${size}" style="transform:rotate(-90deg);flex-shrink:0">
-    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="rgba(120,120,120,0.15)" stroke-width="${s}"/>
-    <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${s}"
-      stroke-dasharray="${c}" stroke-dashoffset="${o}" stroke-linecap="round" style="transition:stroke-dashoffset .4s,stroke .3s"/>
-    <text x="${size/2}" y="${size/2}" text-anchor="middle" dominant-baseline="central" class="mono ring-text"
-      style="transform:rotate(90deg);transform-origin:center">${Math.round(progress*100)}%</text>
-  </svg>`;
+async function changeResponsible(itemId) {
+  const value = JSON.stringify({ [COL_PERSON]: { personsAndTeams: [{ id: ALINE_ID, kind: 'person' }] } });
+  await mondayQuery(`mutation($boardId:Int!,$itemId:Int!,$value:JSON!){change_multiple_column_values(board_id:$boardId,item_id:$itemId,column_values:$value){id}}`,
+    {boardId:BOARD_ID, itemId:Number(itemId), value});
+}
+
+async function changeNextAction(itemId, label) {
+  const value = JSON.stringify({ [COL_NEXT_ACTION]: { label } });
+  await mondayQuery(`mutation($boardId:Int!,$itemId:Int!,$value:JSON!){change_multiple_column_values(board_id:$boardId,item_id:$itemId,column_values:$value){id}}`,
+    {boardId:BOARD_ID, itemId:Number(itemId), value});
+}
+
+async function moveToProduction(itemId) {
+  await mondayQuery(`mutation($itemId:Int!,$groupId:String!){move_item_to_group(item_id:$itemId,group_id:$groupId){id}}`,
+    {itemId:Number(itemId), groupId:PRODUCTION_GROUP});
+}
+
+// --- RUN ALL AUTOMATIONS ---
+async function runAutomations(itemId, clientName, checkedItems) {
+  state.automating = true;
+  state.autoStatus = { update:'running', person:'pending', status:'pending', move:'pending' };
+  render();
+
+  // Build update body
+  const now = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const doneTasks = ALL_IDS.filter(id => checkedItems[id]);
+  const missedTasks = ALL_IDS.filter(id => !checkedItems[id]);
+  let html = `<h3>Checklist de Onboarding — ${esc(clientName)}</h3>`;
+  html += `<p><strong>Data:</strong> ${now} | <strong>Resultado:</strong> ${doneTasks.length}/${ALL_IDS.length} itens concluídos</p>`;
+  SECTIONS.forEach(sec => {
+    html += `<h4>${sec.icon} ${sec.label}</h4><ul>`;
+    sec.items.forEach(item => {
+      const ok = checkedItems[item.id];
+      html += `<li>${ok ? '✅' : '❌'} ${esc(item.text)}</li>`;
+    });
+    html += `</ul>`;
+  });
+
+  try {
+    // 1. Post & pin update
+    await postUpdateAndPin(itemId, html);
+    state.autoStatus.update = 'done';
+    state.autoStatus.person = 'running'; render();
+
+    // 2. Change responsible
+    await changeResponsible(itemId);
+    state.autoStatus.person = 'done';
+    state.autoStatus.status = 'running'; render();
+
+    // 3. Change next action
+    await changeNextAction(itemId, 'Cobrar Form ou Fotos');
+    state.autoStatus.status = 'done';
+    state.autoStatus.move = 'running'; render();
+
+    // 4. Move to production
+    await moveToProduction(itemId);
+    state.autoStatus.move = 'done'; render();
+
+    showToast('✅ Onboarding finalizado! Todas as ações executadas no Monday.');
+  } catch(e) {
+    console.error('Automation error:', e);
+    const running = Object.keys(state.autoStatus).find(k => state.autoStatus[k] === 'running');
+    if (running) state.autoStatus[running] = 'error';
+    showToast('⚠️ Erro em uma das automações. Verifique o Monday.');
+    render();
+  }
+
+  state.automating = false;
 }
 
 // ============================================================
@@ -267,167 +281,75 @@ function ringSVG(progress, size) {
 // ============================================================
 function render() {
   const app = document.getElementById('app');
-  const sel = state.clients.find(c => c.id === state.selectedId);
-  const done = ALL_IDS.filter(id => state.checked[id]).length;
+  const sel = state.clients.find(c=>c.id===state.selectedId);
+  const done = ALL_IDS.filter(id=>state.checked[id]).length;
   const total = ALL_IDS.length;
-  const progress = total > 0 ? done / total : 0;
-
+  const progress = total>0?done/total:0;
   let h = '';
 
   // Header
-  h += `<div class="header">
-    <div>
-      <div class="header-brand mono">Método 3A</div>
-      <h1 class="header-title">Checklist de Onboarding</h1>
-    </div>
-    <div class="tabs">
-      <button class="tab ${state.view==='checklist'?'active':''}" onclick="setView('checklist')">Checklist</button>
-      <button class="tab ${state.view==='history'?'active':''}" onclick="setView('history')">
-        Histórico${state.history.length>0?`<span class="badge mono">${state.history.length}</span>`:''}
-      </button>
-    </div>
-  </div>`;
+  h += `<div class="header"><div><div class="mono" style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:4px">Método 3A</div><h1 style="font-size:22px;font-weight:700;line-height:1.2">Checklist de Onboarding</h1></div><div class="tabs"><button class="tab ${state.view==='checklist'?'active':''}" onclick="setView('checklist')">Checklist</button><button class="tab ${state.view==='history'?'active':''}" onclick="setView('history')">Histórico${state.history.length>0?`<span class="badge mono">${state.history.length}</span>`:''}</button></div></div>`;
 
-  // ---- CHECKLIST VIEW ----
-  if (state.view === 'checklist') {
+  if (state.view==='checklist') {
     if (!state.started) {
       if (state.loading) {
-        h += `<div class="loading"><div class="loading-spinner"></div><div class="loading-text">Carregando clientes do Monday...</div></div>`;
-      } else if (state.clients.length === 0) {
-        h += `<div class="empty">
-          <div style="font-size:40px;margin-bottom:16px">🚀</div>
-          <div style="font-size:17px;font-weight:700;margin-bottom:6px">Checklist de Onboarding</div>
-          <div style="font-size:14px;color:var(--t2);margin-bottom:24px">Carregue os clientes do Monday para começar</div>
-          <button class="btn-start new" style="padding:10px 24px;font-size:14px" onclick="fetchClients()">Carregar Clientes do Monday</button>
-        </div>`;
+        h += `<div style="text-align:center;padding:40px"><div class="loading-spinner"></div><div style="font-size:13px;color:var(--t2)">Carregando clientes...</div></div>`;
+      } else if (state.clients.length===0) {
+        h += `<div class="empty"><div style="font-size:40px;margin-bottom:16px">🚀</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">Checklist de Onboarding</div><div style="font-size:14px;color:var(--t2);margin-bottom:24px">Carregue os clientes do Monday para começar</div><button class="btn-start new" style="padding:10px 24px;font-size:14px" onclick="fetchClients()">Carregar Clientes do Monday</button></div>`;
       } else {
-        // Alert bar
-        const critCount = state.clients.filter(c => getUrgency(getDaysIn(c.created))==='critical').length;
-        const warnCount = state.clients.filter(c => getUrgency(getDaysIn(c.created))==='warning').length;
-        if (critCount > 0 || warnCount > 0) {
-          h += `<div class="alert-bar">`;
-          if (critCount > 0) h += `<div class="alert-pill alert-red">🔴 ${critCount} ${critCount===1?'cliente':'clientes'} há +2 semanas</div>`;
-          if (warnCount > 0) h += `<div class="alert-pill alert-yellow">🟡 ${warnCount} ${warnCount===1?'cliente':'clientes'} há +1 semana</div>`;
-          h += `</div>`;
-        }
-
-        h += `<div class="list-header">
-          <div class="list-title mono">🚀 Onboarding (${state.clients.length})</div>
-          <button class="btn-refresh" onclick="refreshClients(this)">🔄 Atualizar</button>
-        </div>`;
-
-        h += `<div class="client-list">`;
-        state.clients.forEach(c => {
-          const days = getDaysIn(c.created);
-          const urg = getUrgency(days);
-          const dc = getDraftCount(c.id);
-          const hasDraft = dc > 0;
-
-          h += `<div class="client-card ${urg}">
-            <div class="client-info">
-              <div class="client-name">
-                <span>${esc(c.name)}</span>
-                ${urg!=='ok' ? `<span class="urg-badge ${urg} mono">${days}d</span>` : ''}
-                ${hasDraft ? `<span class="draft-badge mono">✏️ ${dc}/${total}</span>` : ''}
-              </div>
-              <div class="client-meta mono">
-                <span>R$${c.value}/mês</span><span>·</span>
-                <span>Desde ${fmtShort(c.created)}</span><span>·</span>
-                <span>${esc(c.nextAction)}</span>
-              </div>
-            </div>
-            <div class="client-actions">
-              ${c.chat ? `<a href="${esc(c.chat)}" target="_blank" rel="noopener noreferrer" class="btn-chat" title="Abrir conversa no Kommo">💬</a>` : ''}
-              <button class="btn-start ${hasDraft?'draft':'new'}" onclick="startChecklist('${c.id}')">${hasDraft?'Continuar ▶':'Iniciar ▶'}</button>
-            </div>
-          </div>`;
+        const cc=state.clients.filter(c=>getUrg(getDaysIn(c.created))==='critical').length;
+        const wc=state.clients.filter(c=>getUrg(getDaysIn(c.created))==='warning').length;
+        if(cc>0||wc>0){h+=`<div class="alert-bar">`;if(cc>0)h+=`<div class="alert-pill alert-red">🔴 ${cc} ${cc===1?'cliente':'clientes'} há +2 semanas</div>`;if(wc>0)h+=`<div class="alert-pill alert-yellow">🟡 ${wc} ${wc===1?'cliente':'clientes'} há +1 semana</div>`;h+=`</div>`}
+        h+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div class="mono" style="font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:1px">🚀 Onboarding (${state.clients.length})</div><button class="btn-refresh" onclick="fetchClients()">🔄 Atualizar</button></div>`;
+        h+=`<div class="client-list">`;
+        state.clients.forEach(c=>{
+          const days=getDaysIn(c.created),urg=getUrg(days),dc=getDraftCount(c.id),hd=dc>0;
+          h+=`<div class="client-card ${urg}"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span>${esc(c.name)}</span>${urg!=='ok'?`<span class="urg-badge ${urg} mono">${days}d</span>`:''}${hd?`<span class="draft-badge mono">✏️ ${dc}/${total}</span>`:''}</div><div class="mono" style="font-size:11px;color:var(--t2);margin-top:3px;display:flex;flex-wrap:wrap;gap:0 8px"><span>R$${c.value}/mês</span><span>·</span><span>Desde ${fmtShort(c.created)}</span><span>·</span><span>${esc(c.nextAction)}</span></div></div><div style="display:flex;gap:6px;flex-shrink:0">${c.chat?`<a href="${esc(c.chat)}" target="_blank" rel="noopener noreferrer" class="btn-chat" title="Conversa no Kommo">💬</a>`:''}<button class="btn-start ${hd?'draft':'new'}" onclick="startChecklist('${c.id}')">${hd?'Continuar ▶':'Iniciar ▶'}</button></div></div>`;
         });
-        h += `</div>`;
-        h += `<div class="footer-note mono">Dados do Monday · Clique em Atualizar para puxar dados frescos</div>`;
+        h+=`</div><div class="mono" style="margin-top:14px;font-size:11px;color:var(--t2);text-align:center">Clique em Atualizar para puxar dados frescos do Monday</div>`;
       }
-
     } else {
       // Active checklist
-      const days = sel ? getDaysIn(sel.created) : 0;
-      const urg = getUrgency(days);
+      const days=sel?getDaysIn(sel.created):0,urg=getUrg(days);
+      h+=`<div class="active-header ${urg}"><div style="flex:1"><div class="mono" style="font-size:11px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px">Cliente</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:18px;font-weight:700">${sel?esc(sel.name):'—'}</span>${urg!=='ok'?`<span class="urg-badge ${urg} mono">${days}d</span>`:''}${sel?.chat?`<a href="${esc(sel.chat)}" target="_blank" rel="noopener noreferrer" style="font-size:14px;text-decoration:none;padding:2px 6px;border-radius:5px;border:1px solid var(--bdr);color:var(--t2)">💬</a>`:''}</div><div class="mono" style="font-size:11px;color:var(--t2);margin-top:2px">ID: ${state.selectedId} · R$${sel?sel.value:'—'}/mês</div><div class="mono" style="font-size:12px;color:var(--t2);margin-top:2px">${done}/${total} concluídos</div></div>${ringSVG(progress)}</div>`;
 
-      h += `<div class="active-header ${urg}">
-        <div style="flex:1">
-          <div style="font-size:11px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px" class="mono">Cliente</div>
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-            <span style="font-size:18px;font-weight:700">${sel?esc(sel.name):'—'}</span>
-            ${urg!=='ok' ? `<span class="urg-badge ${urg} mono">${days}d</span>` : ''}
-            ${sel?.chat ? `<a href="${esc(sel.chat)}" target="_blank" rel="noopener noreferrer" style="font-size:14px;text-decoration:none;padding:2px 6px;border-radius:5px;border:1px solid var(--bdr);color:var(--t2)">💬</a>` : ''}
-          </div>
-          <div style="font-size:11px;color:var(--t2);margin-top:2px" class="mono">ID: ${state.selectedId} · R$${sel?sel.value:'—'}/mês</div>
-          <div style="font-size:12px;color:var(--t2);margin-top:2px" class="mono">${done}/${total} concluídos</div>
-        </div>
-        ${ringSVG(progress)}
-      </div>`;
-
-      SECTIONS.forEach(section => {
-        const sDone = section.items.filter(i => state.checked[i.id]).length;
-        const sTotal = section.items.length;
-        h += `<div class="section">
-          <div class="section-header">
-            <div class="section-label mono"><span>${section.icon}</span><span>${section.label}</span></div>
-            <span class="section-count ${sDone===sTotal?'done':''} mono">${sDone}/${sTotal}</span>
-          </div>
-          <div class="check-items">`;
-        section.items.forEach(item => {
-          const isChecked = !!state.checked[item.id];
-          h += `<button class="check-item ${isChecked?'checked':''}" onclick="toggleItem('${item.id}')">
-            <span class="check-box">${isChecked?'✓':''}</span>
-            <span class="check-text">${esc(item.text)}</span>
-          </button>`;
-        });
-        h += `</div></div>`;
+      SECTIONS.forEach(sec=>{
+        const sd=sec.items.filter(i=>state.checked[i.id]).length,st=sec.items.length;
+        h+=`<div class="section"><div class="section-header"><div class="section-label mono"><span>${sec.icon}</span><span>${sec.label}</span></div><span class="section-count ${sd===st?'done':''} mono">${sd}/${st}</span></div><div class="check-items">`;
+        sec.items.forEach(item=>{const ic=!!state.checked[item.id];h+=`<button class="check-item ${ic?'checked':''}" onclick="toggleItem('${item.id}')"><span class="check-box">${ic?'✓':''}</span><span class="check-text">${esc(item.text)}</span></button>`});
+        h+=`</div></div>`;
       });
 
-      h += `<div class="actions">
-        <button class="btn btn-back" onclick="cancelChecklist()">← Voltar</button>
-        <button class="btn btn-finish ${progress===1?'green':'amber'}" onclick="finishChecklist()">
-          ${progress===1 ? '✓ Finalizar Onboarding' : `Salvar (${done}/${total} feitos)`}
-        </button>
-      </div>`;
+      // Automation panel (shows when finishing)
+      if (state.automating || Object.keys(state.autoStatus).length > 0 && state.autoStatus.update) {
+        const autoItems = [
+          { key:'update', label:'Postar checklist na Atualização e fixar' },
+          { key:'person', label:'Mudar responsável CS para Aline' },
+          { key:'status', label:'Mudar Próxima Ação para "Cobrar Form ou Fotos"' },
+          { key:'move', label:'Mover cliente para Grupo Produção' },
+        ];
+        h += `<div class="auto-panel"><div class="auto-title mono">⚡ Ações no Monday</div>`;
+        autoItems.forEach(ai => {
+          const st = state.autoStatus[ai.key] || 'pending';
+          const stLabel = st==='done'?'Feito':st==='running'?'Executando...':st==='error'?'Erro':'Aguardando';
+          h += `<div class="auto-item"><span class="auto-check ${st==='done'?'on':'off'}">${st==='done'?'✓':''}</span><span class="auto-label">${ai.label}</span><span class="auto-status ${st} mono">${stLabel}</span></div>`;
+        });
+        h += `</div>`;
+      }
+
+      h+=`<div class="actions"><button class="btn btn-back" onclick="cancelChecklist()" ${state.automating?'disabled':''}>← Voltar</button><button class="btn btn-finish ${progress===1?'green':'amber'}" onclick="finishChecklist()" ${state.automating?'disabled':''}>${state.automating?'Executando...':progress===1?'✓ Finalizar Onboarding':`Salvar (${done}/${total} feitos)`}</button></div>`;
     }
   }
 
-  // ---- HISTORY VIEW ----
-  if (state.view === 'history') {
-    if (state.history.length === 0) {
-      h += `<div class="empty"><div style="font-size:36px;margin-bottom:12px;opacity:.5">📭</div><div style="font-size:14px;color:var(--t2)">Nenhum onboarding registrado ainda.</div></div>`;
-    } else {
-      h += `<div class="history-list">`;
-      state.history.forEach((entry, idx) => {
-        const pct = entry.total > 0 ? entry.completed / entry.total : 0;
-        const isOk = pct === 1;
-        const isExp = state.expanded === idx;
-        const missed = [];
-        if (!isOk) SECTIONS.forEach(s => s.items.forEach(i => { if (!entry.items[i.id]) missed.push({ section:s.label, text:i.text }); }));
-
-        h += `<div class="history-card ${isOk?'complete':''}">
-          <div class="history-main ${!isOk?'clickable':''}" onclick="${!isOk?`toggleExpand(${idx})`:''}" >
-            ${ringSVG(pct, 44)}
-            <div class="history-info">
-              <div class="history-name">${esc(entry.client)}</div>
-              <div class="history-meta mono">${fmtDate(entry.date)} · ${entry.completed}/${entry.total} · ID: ${entry.clientId||'—'}</div>
-              ${isOk ? '<div class="history-status" style="color:#16a34a">✓ Completo</div>' :
-                isExp ? '' :
-                `<div class="history-status" style="color:#f59e0b">⚠ ${missed.length} ${missed.length===1?'item pendente':'itens pendentes'} — toque para ver</div>`}
-            </div>
-            <button class="btn-delete" onclick="event.stopPropagation();deleteEntry(${idx})" title="Remover">×</button>
-          </div>`;
-        if (isExp && missed.length > 0) {
-          h += `<div class="history-expanded">
-            <div class="missed-title mono">Itens não concluídos</div>
-            ${missed.map(m => `<div class="missed-item"><span class="dot">○</span><span><strong>${esc(m.section)}:</strong> ${esc(m.text)}</span></div>`).join('')}
-          </div>`;
-        }
-        h += `</div>`;
-      });
-      h += `</div>`;
-    }
+  if (state.view==='history') {
+    if(state.history.length===0){h+=`<div class="empty"><div style="font-size:36px;margin-bottom:12px;opacity:.5">📭</div><div style="font-size:14px;color:var(--t2)">Nenhum onboarding registrado ainda.</div></div>`}
+    else{h+=`<div class="history-list">`;state.history.forEach((entry,idx)=>{
+      const pct=entry.total>0?entry.completed/entry.total:0,isOk=pct===1,isExp=state.expanded===idx;
+      const missed=[];if(!isOk)SECTIONS.forEach(s=>s.items.forEach(i=>{if(!entry.items[i.id])missed.push({section:s.label,text:i.text})}));
+      h+=`<div class="history-card ${isOk?'complete':''}"><div class="history-main ${!isOk?'clickable':''}" onclick="${!isOk?`toggleExpand(${idx})`:''}">${ringSVG(pct,44)}<div style="flex:1"><div style="font-size:15px;font-weight:700">${esc(entry.client)}</div><div class="mono" style="font-size:12px;color:var(--t2);margin-top:2px">${fmtDate(entry.date)} · ${entry.completed}/${entry.total} · ID: ${entry.clientId||'—'}</div>${isOk?'<div style="font-size:11px;font-weight:600;margin-top:4px;color:#16a34a">✓ Completo</div>':isExp?'':`<div style="font-size:11px;font-weight:600;margin-top:4px;color:#f59e0b">⚠ ${missed.length} ${missed.length===1?'item pendente':'itens pendentes'} — toque para ver</div>`}</div><button class="btn-delete" onclick="event.stopPropagation();deleteEntry(${idx})" title="Remover">×</button></div>`;
+      if(isExp&&missed.length>0){h+=`<div class="history-expanded"><div class="mono" style="font-size:11px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Itens não concluídos</div>${missed.map(m=>`<div class="missed-item"><span style="color:#f59e0b;flex-shrink:0">○</span><span><strong style="color:var(--t1);font-weight:600;font-size:11px">${esc(m.section)}:</strong> ${esc(m.text)}</span></div>`).join('')}</div>`}
+      h+=`</div>`;
+    });h+=`</div>`}
   }
 
   app.innerHTML = h;
@@ -436,75 +358,37 @@ function render() {
 // ============================================================
 // ACTIONS
 // ============================================================
-function setView(v) { state.view = v; state.expanded = null; render(); }
+function setView(v){state.view=v;state.expanded=null;render()}
+function startChecklist(cid){state.selectedId=cid;state.checked=loadDraft(cid);state.started=true;state.autoStatus={};render();window.scrollTo({top:0,behavior:'smooth'})}
+function cancelChecklist(){state.started=false;state.selectedId=null;state.checked={};state.autoStatus={};render()}
+function toggleItem(id){state.checked[id]=!state.checked[id];if(state.selectedId)saveDraft(state.selectedId,state.checked);render()}
+function toggleExpand(i){state.expanded=state.expanded===i?null:i;render()}
+function deleteEntry(i){state.history.splice(i,1);saveHistoryLS();if(state.expanded===i)state.expanded=null;render()}
 
-function refreshClients(btn) {
-  if (btn) btn.classList.add('spinning');
-  fetchClients().then(() => { if (btn) setTimeout(() => btn.classList.remove('spinning'), 800); });
-}
+async function finishChecklist() {
+  const sel = state.clients.find(c=>c.id===state.selectedId);
+  const done = ALL_IDS.filter(id=>state.checked[id]).length;
 
-function startChecklist(cid) {
-  state.selectedId = cid;
-  state.checked = loadDraft(cid);
-  state.started = true;
-  render();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function cancelChecklist() {
-  state.started = false;
-  state.selectedId = null;
-  state.checked = {};
-  render();
-}
-
-function toggleItem(id) {
-  state.checked[id] = !state.checked[id];
-  if (state.selectedId) saveDraft(state.selectedId, state.checked);
-  render();
-}
-
-function finishChecklist() {
-  const sel = state.clients.find(c => c.id === state.selectedId);
-  const done = ALL_IDS.filter(id => state.checked[id]).length;
-  const entry = {
-    client: sel ? sel.name : '—',
-    clientId: state.selectedId,
-    date: new Date().toISOString(),
-    completed: done,
-    total: ALL_IDS.length,
-    items: { ...state.checked },
-  };
+  // Save to history
+  const entry = { client:sel?.name||'—', clientId:state.selectedId, date:new Date().toISOString(), completed:done, total:ALL_IDS.length, items:{...state.checked} };
   state.history.unshift(entry);
-  saveHistory();
+  saveHistoryLS();
 
-  // TODO: Ações automáticas no Monday entram aqui
-  // Ex: mover grupo, mudar status, postar atualização
+  // Run Monday automations
+  await runAutomations(state.selectedId, sel?.name||'—', state.checked);
 
-  if (state.selectedId) deleteDraft(state.selectedId);
-  state.started = false;
-  state.selectedId = null;
-  state.checked = {};
-  render();
+  // Cleanup
+  if(state.selectedId) deleteDraft(state.selectedId);
+
+  // Small delay so user can see the completed status
+  setTimeout(() => {
+    state.started=false; state.selectedId=null; state.checked={}; state.autoStatus={};
+    render();
+  }, 2000);
 }
 
-function toggleExpand(idx) {
-  state.expanded = state.expanded === idx ? null : idx;
-  render();
-}
-
-function deleteEntry(idx) {
-  state.history.splice(idx, 1);
-  saveHistory();
-  if (state.expanded === idx) state.expanded = null;
-  render();
-}
-
-// ============================================================
-// INIT
-// ============================================================
+// Init
 render();
 </script>
-
 </body>
 </html>
