@@ -48,6 +48,25 @@
   .check-item.checked .check-box{border:none;background:#16a34a}
   .check-text{font-size:14px;color:var(--t1);line-height:1.4;transition:all .2s}
   .check-item.checked .check-text{color:rgba(120,120,120,0.5);text-decoration:line-through}
+
+  /* Input items */
+  .input-item{padding:12px 14px;border:1.5px solid rgba(120,120,120,0.15);border-radius:10px;background:transparent;transition:all .2s}
+  .input-item.filled{border-color:rgba(22,163,106,0.25);background:rgba(22,163,106,0.06)}
+  .input-item-label{font-size:14px;color:var(--t1);font-weight:600;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+  .input-item-label .req{font-size:10px;color:#ef4444;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
+  .input-item input[type="text"]{width:100%;padding:8px 10px;border-radius:7px;border:1.5px solid var(--bdr);background:var(--bg);color:var(--t1);font-size:13px;font-family:inherit;outline:none;transition:border-color .2s}
+  .input-item input[type="text"]:focus{border-color:#6366f1}
+  .input-item input[type="text"].has-value{border-color:rgba(22,163,106,0.4)}
+
+  /* Select items */
+  .select-item{padding:12px 14px;border:1.5px solid rgba(120,120,120,0.15);border-radius:10px;background:transparent;transition:all .2s}
+  .select-item.filled{border-color:rgba(22,163,106,0.25);background:rgba(22,163,106,0.06)}
+  .select-item-label{font-size:14px;color:var(--t1);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .select-options{display:flex;gap:6px;flex-wrap:wrap}
+  .select-opt{padding:6px 14px;border-radius:7px;border:1.5px solid var(--bdr);background:transparent;color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+  .select-opt:hover{border-color:var(--t1);color:var(--t1)}
+  .select-opt.selected{border-color:#16a34a;background:#16a34a;color:#fff}
+
   .actions{display:flex;gap:10px;margin-top:24px}
   .btn{padding:12px 0;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;text-align:center}
   .btn-back{flex:1;border:1.5px solid var(--bdr);background:transparent;color:var(--t2)}
@@ -84,58 +103,73 @@
 <div class="container" id="app"></div>
 <div class="toast" id="toast"></div>
 <script>
-// ============================================================
-// CONFIG — API KEY FIXA
-// ============================================================
-const MONDAY_API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjU4MTgwNTk3MSwiYWFpIjoxMSwidWlkIjozMzM2OTk1NCwiaWFkIjoiMjAyNS0xMS0wM1QxNjo1Mzo1Mi4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTIzMjEwNTMsInJnbiI6InVzZTEifQ.hu_8RkvIbe__DGXRrzWZExtxXUjPgLaQr3FJ-tBsV1E';
-const BOARD_ID = 3946353259;
-const ONBOARDING_GROUP = '1675800307_conta_inicial_2_01_';
-const PRODUCTION_GROUP = 'novo_grupo59646';
-const MONDAY_API = 'https://api.monday.com/v2';
-const ALINE_ID = 58853060;
+const MONDAY_API_KEY='eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjU4MTgwNTk3MSwiYWFpIjoxMSwidWlkIjozMzM2OTk1NCwiaWFkIjoiMjAyNS0xMS0wM1QxNjo1Mzo1Mi4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTIzMjEwNTMsInJnbiI6InVzZTEifQ.hu_8RkvIbe__DGXRrzWZExtxXUjPgLaQr3FJ-tBsV1E';
+const BOARD_ID=3946353259,ONBOARDING_GROUP='1675800307_conta_inicial_2_01_',PRODUCTION_GROUP='novo_grupo59646',MONDAY_API='https://api.monday.com/v2',ALINE_ID=58853060;
 
-const SECTIONS = [
+// ITEM TYPES: 'check' | 'text' | 'select'
+const SECTIONS=[
   {key:'before',label:'Antes da Reunião',icon:'📋',items:[
-    {id:'b0',text:'Start agendado'},
-    {id:'b1',text:'Enviar mensagem para confirmar reunião'},
-    {id:'b2',text:'Verificar se foi confirmado pelo cliente'},
-    {id:'b3',text:'Estudar cliente — Solicitação de Consultor e Pré-diagnóstico. Identificar potenciais problemas e se preparar para as defesas'},
-    {id:'b4',text:'Verificar Plano contratado e forma de pagamento (Básico/Premium e se é mensal ou anual)'},
-    {id:'b5',text:'Buscar sites similares dentro da base para mostrar em chamada para cliente'},
-    {id:'b6',text:'Buscar por perfis GMN e Sites'},
-    {id:'b7',text:'Se cliente já tiver site, verificar desempenho no PageSpeed'},
-    {id:'b8',text:'Ter todas essas informações "em mãos"'},
-    {id:'b9',text:'Enviar mensagem logo antes da chamada com o link'},
+    {id:'b0',type:'check',text:'Start agendado'},
+    {id:'b1',type:'check',text:'Enviar mensagem para confirmar reunião'},
+    {id:'b2',type:'check',text:'Verificar se foi confirmado pelo cliente'},
+    {id:'b3',type:'check',text:'Estudar cliente — Solicitação de Consultor e Pré-diagnóstico. Identificar potenciais problemas e se preparar para as defesas'},
+    {id:'b4',type:'check',text:'Verificar Plano contratado e forma de pagamento (Básico/Premium e se é mensal ou anual)'},
+    {id:'b5',type:'check',text:'Buscar sites similares dentro da base para mostrar em chamada para cliente'},
+    {id:'b6',type:'check',text:'Buscar por perfis GMN e Sites'},
+    {id:'b7',type:'check',text:'Se cliente já tiver site, verificar desempenho no PageSpeed'},
+    {id:'b8',type:'check',text:'Ter todas essas informações "em mãos"'},
+    {id:'b9',type:'check',text:'Enviar mensagem logo antes da chamada com o link'},
   ]},
   {key:'during',label:'Durante a Reunião',icon:'🎯',items:[
-    {id:'d1',text:'Repassar ponto a ponto do roteiro de onboarding'},
-    {id:'d2',text:'Mostrar exemplos de sites'},
-    {id:'d3',text:'Alinhar sobre verba mensal investida'},
-    {id:'d4',text:'Falar sobre multa quando mensal'},
+    {id:'d1',type:'check',text:'Repassar ponto a ponto apresentação de onboarding'},
+    {id:'d2',type:'check',text:'Mostrar exemplos de sites'},
+    {id:'d3',type:'check',text:'Falado sobre prazo contratual (multa quando Mensal, dizer que não tem cancelamento quando anual)'},
+    {id:'d4',type:'select',text:'Modelo de Site',options:['Básico','Premium']},
+    {id:'d5',type:'select',text:'Hospedagem',options:['M3A','Própria (Usaremos Wordpress)','A decidir']},
+    {id:'d6',type:'text',text:'GMN — Tem? Alguma observação?',placeholder:'Ex: Sim, já tem perfil ativo / Não tem, criar do zero...'},
+    {id:'d7',type:'text',text:'Verba mensal combinada para tráfego',placeholder:'Ex: R$1.500/mês'},
   ]},
   {key:'after',label:'Pós Reunião',icon:'✅',items:[
-    {id:'a1',text:'Enviar msg para cliente de pós-start — Atalho /Produção 1 (Enviar Pós-Start)'},
-    {id:'a2',text:'Enviar msg no "limbo" (para o Salesbot) para time — Atalho /Pós-start no Kommo, e preencher as informações'},
-    {id:'a3',text:'Alterar Responsável no Kommo'},
-    {id:'a4',text:'Copiar mensagem do Limbo para Atualização no Monday'},
-    {id:'a5',text:'Fixar a mensagem'},
-    {id:'a6',text:'Alterar Responsável no Monday (Coluna com a foto) para Aline e Remover Felipe'},
-    {id:'a7',text:'Mudar próxima Ação para Cobrar Form ou Fotos'},
-    {id:'a8',text:'Mover cliente para Grupo Produção'},
+    {id:'a1',type:'check',text:'Enviar msg para cliente de pós-start — Atalho /Produção 1 (Enviar Pós-Start)'},
+    {id:'a2',type:'check',text:'Enviar msg no "limbo" (para o Salesbot) para time — Atalho /Pós-start no Kommo, e preencher as informações'},
+    {id:'a3',type:'check',text:'Alterar Responsável no Kommo'},
+    {id:'a4',type:'check',text:'Copiar mensagem do Limbo para Atualização no Monday'},
+    {id:'a5',type:'check',text:'Fixar a mensagem'},
+    {id:'a6',type:'check',text:'Alterar Responsável no Monday (Coluna com a foto) para Aline e Remover Felipe'},
+    {id:'a7',type:'check',text:'Mudar próxima Ação para Cobrar Form ou Fotos'},
+    {id:'a8',type:'check',text:'Mover cliente para Grupo Produção'},
   ]},
 ];
-const ALL_IDS = SECTIONS.flatMap(s=>s.items.map(i=>i.id));
+const ALL_ITEMS=SECTIONS.flatMap(s=>s.items);
+const ALL_IDS=ALL_ITEMS.map(i=>i.id);
 
 const HISTORY_KEY='m3a-onboarding-history',DRAFTS_KEY='m3a-onboarding-drafts';
-let state={view:'checklist',clients:[],loading:false,selectedId:null,started:false,checked:{},history:JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'),expanded:null,automating:false,autoStatus:{}};
+let state={view:'checklist',clients:[],loading:false,selectedId:null,started:false,checked:{},values:{},history:JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'),expanded:null,automating:false,autoStatus:{}};
 
+// Draft = { checked:{id:bool}, values:{id:string} }
 function loadAllDrafts(){try{return JSON.parse(localStorage.getItem(DRAFTS_KEY)||'{}')}catch{return{}}}
 function saveAllDrafts(d){try{localStorage.setItem(DRAFTS_KEY,JSON.stringify(d))}catch{}}
-function loadDraft(c){return loadAllDrafts()[c]||{}}
-function saveDraft(c,ch){const a=loadAllDrafts();if(Object.values(ch).some(v=>v))a[c]=ch;else delete a[c];saveAllDrafts(a)}
+function loadDraft(c){const d=loadAllDrafts()[c];return d||{checked:{},values:{}};}
+function saveDraft(c){
+  const all=loadAllDrafts();
+  const hasData=Object.values(state.checked).some(v=>v)||Object.values(state.values).some(v=>v);
+  if(hasData)all[c]={checked:state.checked,values:state.values};else delete all[c];
+  saveAllDrafts(all);
+}
 function deleteDraft(c){const a=loadAllDrafts();delete a[c];saveAllDrafts(a)}
-function getDraftCount(c){return ALL_IDS.filter(id=>loadDraft(c)[id]).length}
+function getDraftProgress(c){
+  const d=loadAllDrafts()[c];if(!d)return 0;
+  return ALL_ITEMS.filter(i=>isItemDone(i,d.checked||{},d.values||{})).length;
+}
 function saveHistoryLS(){localStorage.setItem(HISTORY_KEY,JSON.stringify(state.history))}
+
+function isItemDone(item,checked,values){
+  if(item.type==='check')return !!checked[item.id];
+  if(item.type==='text')return !!(values[item.id]&&values[item.id].trim());
+  if(item.type==='select')return !!(values[item.id]);
+  return false;
+}
+
 function getDaysIn(c){return Math.floor((new Date()-new Date(c+'T00:00:00'))/86400000)}
 function getUrg(d){return d>=14?'critical':d>=7?'warning':'ok'}
 function fmtDate(i){return new Date(i).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
@@ -148,123 +182,71 @@ function ringSVG(p,sz){
   return`<svg width="${sz}" height="${sz}" style="transform:rotate(-90deg);flex-shrink:0"><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="rgba(120,120,120,0.15)" stroke-width="${s}"/><circle cx="${sz/2}" cy="${sz/2}" r="${r}" fill="none" stroke="${col}" stroke-width="${s}" stroke-dasharray="${c}" stroke-dashoffset="${o}" stroke-linecap="round" style="transition:stroke-dashoffset .4s,stroke .3s"/><text x="${sz/2}" y="${sz/2}" text-anchor="middle" dominant-baseline="central" class="mono ring-text" style="transform:rotate(90deg);transform-origin:center">${Math.round(p*100)}%</text></svg>`;
 }
 
-// ============================================================
 // MONDAY API
-// ============================================================
-async function mondayGQL(query, variables) {
-  const res = await fetch(MONDAY_API, {
-    method:'POST',
-    headers:{'Content-Type':'application/json','Authorization':MONDAY_API_KEY,'API-Version':'2024-10'},
-    body:JSON.stringify({query, variables: variables || {}})
-  });
-  const json = await res.json();
-  if (json.errors) { console.error('Monday API errors:', json.errors); throw new Error(json.errors[0]?.message || 'API error'); }
-  return json;
+async function mondayGQL(query,variables){
+  const res=await fetch(MONDAY_API,{method:'POST',headers:{'Content-Type':'application/json','Authorization':MONDAY_API_KEY,'API-Version':'2024-10'},body:JSON.stringify({query,variables:variables||{}})});
+  const json=await res.json();if(json.errors){console.error('Monday API:',json.errors);throw new Error(json.errors[0]?.message||'API error');}return json;
 }
-
 async function fetchClients(){
   state.loading=true;render();
   try{
     const data=await mondayGQL(`query{boards(ids:[${BOARD_ID}]){groups(ids:["${ONBOARDING_GROUP}"]){items_page(limit:50){items{id name created_at column_values(ids:["status_1","numeric","color","texto9__1"]){id text}}}}}}`);
     const items=data?.data?.boards?.[0]?.groups?.[0]?.items_page?.items||[];
-    state.clients=items.map(item=>{
-      const cols={};(item.column_values||[]).forEach(c=>{cols[c.id]=c.text});
-      return{id:item.id,name:item.name,created:item.created_at.split('T')[0],nextAction:cols.status_1||'—',value:cols.numeric||'—',chat:cols['texto9__1']||null};
-    }).sort((a,b)=>{const da=getDaysIn(a.created),db=getDaysIn(b.created),ua=da>=14?0:da>=7?1:2,ub=db>=14?0:db>=7?1:2;return ua!==ub?ua-ub:db-da});
+    state.clients=items.map(item=>{const cols={};(item.column_values||[]).forEach(c=>{cols[c.id]=c.text});return{id:item.id,name:item.name,created:item.created_at.split('T')[0],nextAction:cols.status_1||'—',value:cols.numeric||'—',chat:cols['texto9__1']||null};}).sort((a,b)=>{const da=getDaysIn(a.created),db=getDaysIn(b.created),ua=da>=14?0:da>=7?1:2,ub=db>=14?0:db>=7?1:2;return ua!==ub?ua-ub:db-da});
   }catch(e){console.error(e);state.clients=[];}
   state.loading=false;render();
 }
 
-// --- AUTOMATIONS ---
-async function autoPostAndPin(itemId, clientName, checkedItems) {
-  const now = fmtDate(new Date().toISOString());
-  const doneTasks = ALL_IDS.filter(id=>checkedItems[id]).length;
-  let body = `<h3>Checklist de Onboarding — ${clientName}</h3>`;
-  body += `<p><strong>Data:</strong> ${now} | <strong>Resultado:</strong> ${doneTasks}/${ALL_IDS.length} itens</p>`;
-  SECTIONS.forEach(sec => {
-    body += `<h4>${sec.icon} ${sec.label}</h4><ul>`;
-    sec.items.forEach(item => { body += `<li>${checkedItems[item.id]?'✅':'❌'} ${item.text}</li>`; });
-    body += `</ul>`;
+// AUTOMATIONS
+async function autoPostAndPin(itemId,clientName){
+  const now=fmtDate(new Date().toISOString());
+  const doneCount=ALL_ITEMS.filter(i=>isItemDone(i,state.checked,state.values)).length;
+  let body=`<h3>Checklist de Onboarding — ${clientName}</h3>`;
+  body+=`<p><strong>Data:</strong> ${now} | <strong>Resultado:</strong> ${doneCount}/${ALL_ITEMS.length} itens</p>`;
+  SECTIONS.forEach(sec=>{
+    body+=`<h4>${sec.icon} ${sec.label}</h4><ul>`;
+    sec.items.forEach(item=>{
+      const done=isItemDone(item,state.checked,state.values);
+      if(item.type==='check'){
+        body+=`<li>${done?'✅':'❌'} ${item.text}</li>`;
+      }else if(item.type==='text'){
+        const val=state.values[item.id]||'';
+        body+=`<li>${done?'✅':'❌'} <strong>${item.text}:</strong> ${val||'(não preenchido)'}</li>`;
+      }else if(item.type==='select'){
+        const val=state.values[item.id]||'';
+        body+=`<li>${done?'✅':'❌'} <strong>${item.text}:</strong> ${val||'(não selecionado)'}</li>`;
+      }
+    });
+    body+=`</ul>`;
   });
-
-  // 1) Create update
-  const createRes = await mondayGQL(
-    `mutation ($body: String!, $itemId: ID!) { create_update(item_id: $itemId, body: $body) { id } }`,
-    { body, itemId: String(itemId) }
-  );
-  const updateId = createRes?.data?.create_update?.id;
-  if (!updateId) throw new Error('Falha ao criar atualização');
-
-  // 2) Pin update
-  await mondayGQL(
-    `mutation ($updateId: ID!, $itemId: ID!) { pin_to_top(id: $updateId, item_id: $itemId) { id } }`,
-    { updateId: String(updateId), itemId: String(itemId) }
-  );
-  return updateId;
+  const createRes=await mondayGQL(`mutation($body:String!,$itemId:ID!){create_update(item_id:$itemId,body:$body){id}}`,{body,itemId:String(itemId)});
+  const updateId=createRes?.data?.create_update?.id;
+  if(!updateId)throw new Error('Falha ao criar atualização');
+  await mondayGQL(`mutation($updateId:ID!,$itemId:ID!){pin_to_top(id:$updateId,item_id:$itemId){id}}`,{updateId:String(updateId),itemId:String(itemId)});
 }
+async function autoChangeResponsible(itemId){await mondayGQL(`mutation($boardId:ID!,$itemId:ID!,$value:JSON!){change_multiple_column_values(board_id:$boardId,item_id:$itemId,column_values:$value){id}}`,{boardId:String(BOARD_ID),itemId:String(itemId),value:JSON.stringify({person:{personsAndTeams:[{id:ALINE_ID,kind:'person'}]}})});}
+async function autoChangeNextAction(itemId){await mondayGQL(`mutation($boardId:ID!,$itemId:ID!,$value:JSON!){change_multiple_column_values(board_id:$boardId,item_id:$itemId,column_values:$value){id}}`,{boardId:String(BOARD_ID),itemId:String(itemId),value:JSON.stringify({status_1:{label:'Cobrar Form ou fotos'}})});}
+async function autoMoveToProduction(itemId){await mondayGQL(`mutation($itemId:ID!,$groupId:String!){move_item_to_group(item_id:$itemId,group_id:$groupId){id}}`,{itemId:String(itemId),groupId:PRODUCTION_GROUP});}
 
-async function autoChangeResponsible(itemId) {
-  await mondayGQL(
-    `mutation ($boardId: ID!, $itemId: ID!, $value: JSON!) { change_multiple_column_values(board_id: $boardId, item_id: $itemId, column_values: $value) { id } }`,
-    { boardId: String(BOARD_ID), itemId: String(itemId), value: JSON.stringify({ person: { personsAndTeams: [{ id: ALINE_ID, kind: 'person' }] } }) }
-  );
-}
-
-async function autoChangeNextAction(itemId) {
-  await mondayGQL(
-    `mutation ($boardId: ID!, $itemId: ID!, $value: JSON!) { change_multiple_column_values(board_id: $boardId, item_id: $itemId, column_values: $value) { id } }`,
-    { boardId: String(BOARD_ID), itemId: String(itemId), value: JSON.stringify({ status_1: { label: 'Cobrar Form ou fotos' } }) }
-  );
-}
-
-async function autoMoveToProduction(itemId) {
-  await mondayGQL(
-    `mutation ($itemId: ID!, $groupId: String!) { move_item_to_group(item_id: $itemId, group_id: $groupId) { id } }`,
-    { itemId: String(itemId), groupId: PRODUCTION_GROUP }
-  );
-}
-
-async function runAutomations(itemId, clientName, checkedItems) {
-  state.automating=true;
-  state.autoStatus={update:'running',person:'pending',status:'pending',move:'pending'};
-  render();
-
-  const steps = [
-    { key:'update', fn: () => autoPostAndPin(itemId, clientName, checkedItems) },
-    { key:'person', fn: () => autoChangeResponsible(itemId) },
-    { key:'status', fn: () => autoChangeNextAction(itemId) },
-    { key:'move',   fn: () => autoMoveToProduction(itemId) },
-  ];
-
-  let allOk = true;
-  for (const step of steps) {
-    state.autoStatus[step.key] = 'running'; render();
-    try {
-      await step.fn();
-      state.autoStatus[step.key] = 'done'; render();
-    } catch(e) {
-      console.error(`Erro em ${step.key}:`, e);
-      state.autoStatus[step.key] = 'error';
-      allOk = false;
-      render();
-      break;
-    }
-  }
-
-  state.automating = false;
-  if (allOk) showToast('✅ Onboarding finalizado! Todas as ações executadas no Monday.');
+async function runAutomations(itemId,clientName){
+  state.automating=true;state.autoStatus={update:'running',person:'pending',status:'pending',move:'pending'};render();
+  const steps=[{key:'update',fn:()=>autoPostAndPin(itemId,clientName)},{key:'person',fn:()=>autoChangeResponsible(itemId)},{key:'status',fn:()=>autoChangeNextAction(itemId)},{key:'move',fn:()=>autoMoveToProduction(itemId)}];
+  let allOk=true;
+  for(const step of steps){state.autoStatus[step.key]='running';render();try{await step.fn();state.autoStatus[step.key]='done';render();}catch(e){console.error(`Erro em ${step.key}:`,e);state.autoStatus[step.key]='error';allOk=false;render();break;}}
+  state.automating=false;
+  if(allOk)showToast('✅ Onboarding finalizado! Todas as ações executadas no Monday.');
   else showToast('⚠️ Erro em uma das automações. Verifique o Monday.');
 }
 
-// ============================================================
 // RENDER
-// ============================================================
 function render(){
   const app=document.getElementById('app');
   const sel=state.clients.find(c=>c.id===state.selectedId);
-  const done=ALL_IDS.filter(id=>state.checked[id]).length,total=ALL_IDS.length,progress=total>0?done/total:0;
+  const done=ALL_ITEMS.filter(i=>isItemDone(i,state.checked,state.values)).length;
+  const total=ALL_ITEMS.length,progress=total>0?done/total:0;
   let h='';
 
+  // Header
   h+=`<div class="header"><div><div class="mono" style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:4px">Método 3A</div><h1 style="font-size:22px;font-weight:700;line-height:1.2">Checklist de Onboarding</h1></div><div class="tabs"><button class="tab ${state.view==='checklist'?'active':''}" onclick="setView('checklist')">Checklist</button><button class="tab ${state.view==='history'?'active':''}" onclick="setView('history')">Histórico${state.history.length>0?`<span class="badge mono">${state.history.length}</span>`:''}</button></div></div>`;
 
   if(state.view==='checklist'){
@@ -276,37 +258,59 @@ function render(){
         if(cc>0||wc>0){h+=`<div class="alert-bar">`;if(cc>0)h+=`<div class="alert-pill alert-red">🔴 ${cc} ${cc===1?'cliente':'clientes'} há +2 semanas</div>`;if(wc>0)h+=`<div class="alert-pill alert-yellow">🟡 ${wc} ${wc===1?'cliente':'clientes'} há +1 semana</div>`;h+=`</div>`}
         h+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div class="mono" style="font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:1px">🚀 Onboarding (${state.clients.length})</div><button class="btn-refresh" onclick="fetchClients()">🔄 Atualizar</button></div>`;
         h+=`<div class="client-list">`;
-        state.clients.forEach(c=>{const days=getDaysIn(c.created),urg=getUrg(days),dc=getDraftCount(c.id),hd=dc>0;
+        state.clients.forEach(c=>{const days=getDaysIn(c.created),urg=getUrg(days),dc=getDraftProgress(c.id),hd=dc>0;
           h+=`<div class="client-card ${urg}"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span>${esc(c.name)}</span>${urg!=='ok'?`<span class="urg-badge ${urg} mono">${days}d</span>`:''}${hd?`<span class="draft-badge mono">✏️ ${dc}/${total}</span>`:''}</div><div class="mono" style="font-size:11px;color:var(--t2);margin-top:3px;display:flex;flex-wrap:wrap;gap:0 8px"><span>R$${c.value}/mês</span><span>·</span><span>Desde ${fmtShort(c.created)}</span><span>·</span><span>${esc(c.nextAction)}</span></div></div><div style="display:flex;gap:6px;flex-shrink:0">${c.chat?`<a href="${esc(c.chat)}" target="_blank" rel="noopener noreferrer" class="btn-chat" title="Conversa no Kommo">💬</a>`:''}<button class="btn-start ${hd?'draft':'new'}" onclick="startChecklist('${c.id}')">${hd?'Continuar ▶':'Iniciar ▶'}</button></div></div>`;
         });
         h+=`</div><div class="mono" style="margin-top:14px;font-size:11px;color:var(--t2);text-align:center">Clique em Atualizar para puxar dados frescos do Monday</div>`;
       }
     }else{
+      // Active checklist
       const days=sel?getDaysIn(sel.created):0,urg=getUrg(days);
       h+=`<div class="active-header ${urg}"><div style="flex:1"><div class="mono" style="font-size:11px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px">Cliente</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:18px;font-weight:700">${sel?esc(sel.name):'—'}</span>${urg!=='ok'?`<span class="urg-badge ${urg} mono">${days}d</span>`:''}${sel?.chat?`<a href="${esc(sel.chat)}" target="_blank" rel="noopener noreferrer" style="font-size:14px;text-decoration:none;padding:2px 6px;border-radius:5px;border:1px solid var(--bdr);color:var(--t2)">💬</a>`:''}</div><div class="mono" style="font-size:11px;color:var(--t2);margin-top:2px">ID: ${state.selectedId} · R$${sel?sel.value:'—'}/mês</div><div class="mono" style="font-size:12px;color:var(--t2);margin-top:2px">${done}/${total} concluídos</div></div>${ringSVG(progress)}</div>`;
-      SECTIONS.forEach(sec=>{const sd=sec.items.filter(i=>state.checked[i.id]).length,st=sec.items.length;
+
+      SECTIONS.forEach(sec=>{
+        const sd=sec.items.filter(i=>isItemDone(i,state.checked,state.values)).length,st=sec.items.length;
         h+=`<div class="section"><div class="section-header"><div class="section-label mono"><span>${sec.icon}</span><span>${sec.label}</span></div><span class="section-count ${sd===st?'done':''} mono">${sd}/${st}</span></div><div class="check-items">`;
-        sec.items.forEach(item=>{const ic=!!state.checked[item.id];h+=`<button class="check-item ${ic?'checked':''}" onclick="toggleItem('${item.id}')"><span class="check-box">${ic?'✓':''}</span><span class="check-text">${esc(item.text)}</span></button>`});
+
+        sec.items.forEach(item=>{
+          if(item.type==='check'){
+            const ic=!!state.checked[item.id];
+            h+=`<button class="check-item ${ic?'checked':''}" onclick="toggleItem('${item.id}')"><span class="check-box">${ic?'✓':''}</span><span class="check-text">${esc(item.text)}</span></button>`;
+          }else if(item.type==='text'){
+            const val=state.values[item.id]||'';
+            const filled=val.trim().length>0;
+            h+=`<div class="input-item ${filled?'filled':''}"><div class="input-item-label"><span>${esc(item.text)}</span><span class="req">obrigatório</span></div><input type="text" value="${esc(val)}" placeholder="${esc(item.placeholder||'Preencha...')}" oninput="setItemValue('${item.id}',this.value)" class="${filled?'has-value':''}"/></div>`;
+          }else if(item.type==='select'){
+            const val=state.values[item.id]||'';
+            const filled=!!val;
+            h+=`<div class="select-item ${filled?'filled':''}"><div class="select-item-label"><span>${esc(item.text)}</span><span class="req">obrigatório</span></div><div class="select-options">`;
+            item.options.forEach(opt=>{
+              h+=`<button class="select-opt ${val===opt?'selected':''}" onclick="setItemValue('${item.id}','${esc(opt)}')">${esc(opt)}</button>`;
+            });
+            h+=`</div></div>`;
+          }
+        });
         h+=`</div></div>`;
       });
 
+      // Automation panel
       if(state.automating||state.autoStatus.update){
-        const ai=[{key:'update',label:'Postar checklist na Atualização e fixar'},{key:'person',label:'Mudar responsável CS para Aline'},{key:'status',label:'Mudar Próxima Ação → "Cobrar Form ou Fotos"'},{key:'move',label:'Mover cliente para Grupo Produção'}];
+        const ai=[{key:'update',label:'Postar checklist na Atualização e fixar'},{key:'person',label:'Mudar responsável CS para Aline'},{key:'status',label:'Mudar Próxima Ação → "Cobrar Form ou fotos"'},{key:'move',label:'Mover cliente para Grupo Produção'}];
         h+=`<div class="auto-panel"><div class="mono" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">⚡ Ações no Monday</div>`;
-        ai.forEach(a=>{const st=state.autoStatus[a.key]||'pending',lb=st==='done'?'Feito':st==='running'?'Executando...':st==='error'?'Erro':'Aguardando';
-          h+=`<div class="auto-item"><span class="auto-check ${st==='done'?'on':'off'}">${st==='done'?'✓':''}</span><span style="flex:1;color:var(--t1)">${a.label}</span><span class="auto-status ${st} mono">${lb}</span></div>`;
-        });h+=`</div>`;
+        ai.forEach(a=>{const st=state.autoStatus[a.key]||'pending',lb=st==='done'?'Feito':st==='running'?'Executando...':st==='error'?'Erro':'Aguardando';h+=`<div class="auto-item"><span class="auto-check ${st==='done'?'on':'off'}">${st==='done'?'✓':''}</span><span style="flex:1;color:var(--t1)">${a.label}</span><span class="auto-status ${st} mono">${lb}</span></div>`;});
+        h+=`</div>`;
       }
 
       h+=`<div class="actions"><button class="btn btn-back" onclick="cancelChecklist()" ${state.automating?'disabled':''}>← Voltar</button><button class="btn btn-finish ${progress===1?'green':'amber'}" onclick="finishChecklist()" ${state.automating?'disabled':''}>${state.automating?'Executando...':progress===1?'✓ Finalizar Onboarding':`Salvar (${done}/${total} feitos)`}</button></div>`;
     }
   }
 
+  // HISTORY
   if(state.view==='history'){
     if(state.history.length===0){h+=`<div class="empty"><div style="font-size:36px;margin-bottom:12px;opacity:.5">📭</div><div style="font-size:14px;color:var(--t2)">Nenhum onboarding registrado ainda.</div></div>`}
     else{h+=`<div class="history-list">`;state.history.forEach((entry,idx)=>{
       const pct=entry.total>0?entry.completed/entry.total:0,isOk=pct===1,isExp=state.expanded===idx;
-      const missed=[];if(!isOk)SECTIONS.forEach(s=>s.items.forEach(i=>{if(!entry.items[i.id])missed.push({section:s.label,text:i.text})}));
+      const missed=[];if(!isOk)ALL_ITEMS.forEach(i=>{const sec=SECTIONS.find(s=>s.items.includes(i));if(!isItemDone(i,entry.checked||entry.items||{},entry.values||{}))missed.push({section:sec?.label||'',text:i.text,type:i.type});});
       h+=`<div class="history-card ${isOk?'complete':''}"><div class="history-main ${!isOk?'clickable':''}" onclick="${!isOk?`toggleExpand(${idx})`:''}">${ringSVG(pct,44)}<div style="flex:1"><div style="font-size:15px;font-weight:700">${esc(entry.client)}</div><div class="mono" style="font-size:12px;color:var(--t2);margin-top:2px">${fmtDate(entry.date)} · ${entry.completed}/${entry.total} · ID: ${entry.clientId||'—'}</div>${isOk?'<div style="font-size:11px;font-weight:600;margin-top:4px;color:#16a34a">✓ Completo</div>':isExp?'':`<div style="font-size:11px;font-weight:600;margin-top:4px;color:#f59e0b">⚠ ${missed.length} ${missed.length===1?'item pendente':'itens pendentes'} — toque para ver</div>`}</div><button class="btn-delete" onclick="event.stopPropagation();deleteEntry(${idx})" title="Remover">×</button></div>`;
       if(isExp&&missed.length>0){h+=`<div class="history-expanded"><div class="mono" style="font-size:11px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Itens não concluídos</div>${missed.map(m=>`<div class="missed-item"><span style="color:#f59e0b;flex-shrink:0">○</span><span><strong style="color:var(--t1);font-weight:600;font-size:11px">${esc(m.section)}:</strong> ${esc(m.text)}</span></div>`).join('')}</div>`}
       h+=`</div>`;
@@ -315,26 +319,38 @@ function render(){
   app.innerHTML=h;
 }
 
-// ============================================================
 // ACTIONS
-// ============================================================
 function setView(v){state.view=v;state.expanded=null;render()}
-function startChecklist(cid){state.selectedId=cid;state.checked=loadDraft(cid);state.started=true;state.autoStatus={};render();window.scrollTo({top:0,behavior:'smooth'})}
-function cancelChecklist(){state.started=false;state.selectedId=null;state.checked={};state.autoStatus={};render()}
-function toggleItem(id){state.checked[id]=!state.checked[id];if(state.selectedId)saveDraft(state.selectedId,state.checked);render()}
+function startChecklist(cid){
+  state.selectedId=cid;
+  const draft=loadDraft(cid);
+  state.checked=draft.checked||{};
+  state.values=draft.values||{};
+  state.started=true;state.autoStatus={};render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function cancelChecklist(){state.started=false;state.selectedId=null;state.checked={};state.values={};state.autoStatus={};render()}
+function toggleItem(id){state.checked[id]=!state.checked[id];if(state.selectedId)saveDraft(state.selectedId);render()}
+function setItemValue(id,val){
+  // For select: toggle off if clicking the same option
+  const item=ALL_ITEMS.find(i=>i.id===id);
+  if(item&&item.type==='select'&&state.values[id]===val){state.values[id]='';}
+  else{state.values[id]=val;}
+  if(state.selectedId)saveDraft(state.selectedId);render();
+  // Keep focus on text inputs
+  if(item&&item.type==='text'){setTimeout(()=>{const inp=document.querySelector(`input[oninput*="'${id}'"]`);if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);}},0);}
+}
 function toggleExpand(i){state.expanded=state.expanded===i?null:i;render()}
 function deleteEntry(i){state.history.splice(i,1);saveHistoryLS();if(state.expanded===i)state.expanded=null;render()}
 
 async function finishChecklist(){
   const sel=state.clients.find(c=>c.id===state.selectedId);
-  const done=ALL_IDS.filter(id=>state.checked[id]).length;
-  const entry={client:sel?.name||'—',clientId:state.selectedId,date:new Date().toISOString(),completed:done,total:ALL_IDS.length,items:{...state.checked}};
+  const doneCount=ALL_ITEMS.filter(i=>isItemDone(i,state.checked,state.values)).length;
+  const entry={client:sel?.name||'—',clientId:state.selectedId,date:new Date().toISOString(),completed:doneCount,total:ALL_ITEMS.length,checked:{...state.checked},values:{...state.values}};
   state.history.unshift(entry);saveHistoryLS();
-
-  await runAutomations(state.selectedId,sel?.name||'—',state.checked);
-
+  await runAutomations(state.selectedId,sel?.name||'—');
   if(state.selectedId)deleteDraft(state.selectedId);
-  setTimeout(()=>{state.started=false;state.selectedId=null;state.checked={};state.autoStatus={};render()},2500);
+  setTimeout(()=>{state.started=false;state.selectedId=null;state.checked={};state.values={};state.autoStatus={};render()},2500);
 }
 
 render();
