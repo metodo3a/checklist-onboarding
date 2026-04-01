@@ -6,8 +6,8 @@
 <title>Checklist de Onboarding — Método 3A</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#fafaf9; --t1:#1a1a1a; --t2:#6b7280; --card:#fff; --bdr:rgba(120,120,120,0.12); }
-  @media(prefers-color-scheme:dark){ :root { --bg:#0f0f0f; --t1:#e5e5e5; --t2:#9ca3af; --card:#1a1a1a; --bdr:rgba(255,255,255,0.08); } }
+  :root{--bg:#fafaf9;--t1:#1a1a1a;--t2:#6b7280;--card:#fff;--bdr:rgba(120,120,120,0.12)}
+  @media(prefers-color-scheme:dark){:root{--bg:#0f0f0f;--t1:#e5e5e5;--t2:#9ca3af;--card:#1a1a1a;--bdr:rgba(255,255,255,0.08)}}
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t1);min-height:100vh}
   .mono{font-family:'JetBrains Mono',monospace}
@@ -26,8 +26,7 @@
   .client-card.warning{background:rgba(245,158,11,0.07);border-color:rgba(245,158,11,0.35)}
   .client-card.critical{background:rgba(239,68,68,0.07);border-color:rgba(239,68,68,0.35)}
   .urg-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;white-space:nowrap}
-  .urg-badge.warning{background:#f59e0b;color:#fff}
-  .urg-badge.critical{background:#ef4444;color:#fff}
+  .urg-badge.warning{background:#f59e0b;color:#fff}.urg-badge.critical{background:#ef4444;color:#fff}
   .draft-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;background:rgba(99,102,241,0.12);color:#6366f1;white-space:nowrap}
   .btn-chat{width:36px;height:36px;border-radius:8px;border:1.5px solid var(--bdr);background:transparent;color:var(--t2);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all .2s;font-size:16px;cursor:pointer}
   .btn-chat:hover{background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.4);color:#6366f1}
@@ -69,16 +68,11 @@
   .ring-text{font-size:13px;font-weight:700;fill:var(--t1)}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--t1);color:var(--bg);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;max-width:90%;text-align:center}
   .toast.show{opacity:1}
-
-  /* Automation panel */
   .auto-panel{background:var(--card);border:1.5px solid var(--bdr);border-radius:14px;padding:20px;margin-top:20px}
-  .auto-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;color:var(--t1)}
   .auto-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;border-bottom:1px solid var(--bdr)}
   .auto-item:last-child{border-bottom:none}
-  .auto-check{width:18px;height:18px;border-radius:5px;border:2px solid rgba(120,120,120,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;cursor:pointer;transition:all .2s}
-  .auto-check.on{border:none;background:#16a34a;color:#fff}
-  .auto-check.off{background:transparent;color:transparent}
-  .auto-label{flex:1;color:var(--t1)}
+  .auto-check{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;transition:all .2s}
+  .auto-check.on{background:#16a34a;color:#fff}.auto-check.off{border:2px solid rgba(120,120,120,0.2);background:transparent}
   .auto-status{font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px}
   .auto-status.pending{background:rgba(120,120,120,0.08);color:var(--t2)}
   .auto-status.running{background:rgba(99,102,241,0.1);color:#6366f1}
@@ -87,30 +81,21 @@
 </style>
 </head>
 <body>
-
 <div class="container" id="app"></div>
 <div class="toast" id="toast"></div>
-
 <script>
 // ============================================================
-// CONFIG
+// CONFIG — API KEY FIXA
 // ============================================================
 const MONDAY_API_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjU4MTgwNTk3MSwiYWFpIjoxMSwidWlkIjozMzM2OTk1NCwiaWFkIjoiMjAyNS0xMS0wM1QxNjo1Mzo1Mi4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTIzMjEwNTMsInJnbiI6InVzZTEifQ.hu_8RkvIbe__DGXRrzWZExtxXUjPgLaQr3FJ-tBsV1E';
 const BOARD_ID = 3946353259;
 const ONBOARDING_GROUP = '1675800307_conta_inicial_2_01_';
 const PRODUCTION_GROUP = 'novo_grupo59646';
 const MONDAY_API = 'https://api.monday.com/v2';
-
-// User IDs
 const ALINE_ID = 58853060;
-const FELIPE_ID = 33369954;
-
-// Column IDs
-const COL_PERSON = 'person';
-const COL_NEXT_ACTION = 'status_1';
 
 const SECTIONS = [
-  { key:'before', label:'Antes da Reunião', icon:'📋', items:[
+  {key:'before',label:'Antes da Reunião',icon:'📋',items:[
     {id:'b0',text:'Start agendado'},
     {id:'b1',text:'Enviar mensagem para confirmar reunião'},
     {id:'b2',text:'Verificar se foi confirmado pelo cliente'},
@@ -122,13 +107,13 @@ const SECTIONS = [
     {id:'b8',text:'Ter todas essas informações "em mãos"'},
     {id:'b9',text:'Enviar mensagem logo antes da chamada com o link'},
   ]},
-  { key:'during', label:'Durante a Reunião', icon:'🎯', items:[
+  {key:'during',label:'Durante a Reunião',icon:'🎯',items:[
     {id:'d1',text:'Repassar ponto a ponto do roteiro de onboarding'},
     {id:'d2',text:'Mostrar exemplos de sites'},
     {id:'d3',text:'Alinhar sobre verba mensal investida'},
     {id:'d4',text:'Falar sobre multa quando mensal'},
   ]},
-  { key:'after', label:'Pós Reunião', icon:'✅', items:[
+  {key:'after',label:'Pós Reunião',icon:'✅',items:[
     {id:'a1',text:'Enviar msg para cliente de pós-start — Atalho /Produção 1 (Enviar Pós-Start)'},
     {id:'a2',text:'Enviar msg no "limbo" (para o Salesbot) para time — Atalho /Pós-start no Kommo, e preencher as informações'},
     {id:'a3',text:'Alterar Responsável no Kommo'},
@@ -139,28 +124,24 @@ const SECTIONS = [
     {id:'a8',text:'Mover cliente para Grupo Produção'},
   ]},
 ];
-const ALL_IDS = SECTIONS.flatMap(s => s.items.map(i => i.id));
+const ALL_IDS = SECTIONS.flatMap(s=>s.items.map(i=>i.id));
 
-// ============================================================
-// STATE & STORAGE
-// ============================================================
-const HISTORY_KEY = 'm3a-onboarding-history';
-const DRAFTS_KEY = 'm3a-onboarding-drafts';
-let state = { view:'checklist', clients:[], loading:false, selectedId:null, started:false, checked:{}, history:JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'), expanded:null, automating:false, autoStatus:{} };
+const HISTORY_KEY='m3a-onboarding-history',DRAFTS_KEY='m3a-onboarding-drafts';
+let state={view:'checklist',clients:[],loading:false,selectedId:null,started:false,checked:{},history:JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]'),expanded:null,automating:false,autoStatus:{}};
 
 function loadAllDrafts(){try{return JSON.parse(localStorage.getItem(DRAFTS_KEY)||'{}')}catch{return{}}}
 function saveAllDrafts(d){try{localStorage.setItem(DRAFTS_KEY,JSON.stringify(d))}catch{}}
 function loadDraft(c){return loadAllDrafts()[c]||{}}
 function saveDraft(c,ch){const a=loadAllDrafts();if(Object.values(ch).some(v=>v))a[c]=ch;else delete a[c];saveAllDrafts(a)}
 function deleteDraft(c){const a=loadAllDrafts();delete a[c];saveAllDrafts(a)}
-function getDraftCount(c){const d=loadDraft(c);return ALL_IDS.filter(id=>d[id]).length}
+function getDraftCount(c){return ALL_IDS.filter(id=>loadDraft(c)[id]).length}
 function saveHistoryLS(){localStorage.setItem(HISTORY_KEY,JSON.stringify(state.history))}
 function getDaysIn(c){return Math.floor((new Date()-new Date(c+'T00:00:00'))/86400000)}
 function getUrg(d){return d>=14?'critical':d>=7?'warning':'ok'}
 function fmtDate(i){return new Date(i).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function fmtShort(d){return new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function showToast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3000)}
+function showToast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3500)}
 
 function ringSVG(p,sz){
   sz=sz||54;const s=4,r=(sz-s)/2,c=2*Math.PI*r,o=c-p*c,col=p===1?'#16a34a':'#f59e0b';
@@ -168,180 +149,160 @@ function ringSVG(p,sz){
 }
 
 // ============================================================
-// MONDAY API CALLS
+// MONDAY API
 // ============================================================
-async function mondayQuery(query, variables = {}) {
+async function mondayGQL(query, variables) {
   const res = await fetch(MONDAY_API, {
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':MONDAY_API_KEY,'API-Version':'2024-10'},
-    body:JSON.stringify({query, variables})
+    body:JSON.stringify({query, variables: variables || {}})
   });
-  return res.json();
+  const json = await res.json();
+  if (json.errors) { console.error('Monday API errors:', json.errors); throw new Error(json.errors[0]?.message || 'API error'); }
+  return json;
 }
 
-async function fetchClients() {
-  state.loading=true; render();
-  try {
-    const data = await mondayQuery(`query { boards(ids:[${BOARD_ID}]) { groups(ids:["${ONBOARDING_GROUP}"]) { items_page(limit:50) { items { id name created_at column_values(ids:["status_1","numeric","color","texto9__1"]) { id text } } } } } }`);
-    const items = data?.data?.boards?.[0]?.groups?.[0]?.items_page?.items || [];
-    state.clients = items.map(item => {
-      const cols = {}; (item.column_values||[]).forEach(c=>{cols[c.id]=c.text});
-      return { id:item.id, name:item.name, created:item.created_at.split('T')[0], nextAction:cols.status_1||'—', value:cols.numeric||'—', chat:cols['texto9__1']||null };
-    }).sort((a,b) => {
-      const da=getDaysIn(a.created),db=getDaysIn(b.created),ua=da>=14?0:da>=7?1:2,ub=db>=14?0:db>=7?1:2;
-      return ua!==ub?ua-ub:db-da;
-    });
-  } catch(e) { console.error(e); state.clients=[]; }
-  state.loading=false; render();
+async function fetchClients(){
+  state.loading=true;render();
+  try{
+    const data=await mondayGQL(`query{boards(ids:[${BOARD_ID}]){groups(ids:["${ONBOARDING_GROUP}"]){items_page(limit:50){items{id name created_at column_values(ids:["status_1","numeric","color","texto9__1"]){id text}}}}}}`);
+    const items=data?.data?.boards?.[0]?.groups?.[0]?.items_page?.items||[];
+    state.clients=items.map(item=>{
+      const cols={};(item.column_values||[]).forEach(c=>{cols[c.id]=c.text});
+      return{id:item.id,name:item.name,created:item.created_at.split('T')[0],nextAction:cols.status_1||'—',value:cols.numeric||'—',chat:cols['texto9__1']||null};
+    }).sort((a,b)=>{const da=getDaysIn(a.created),db=getDaysIn(b.created),ua=da>=14?0:da>=7?1:2,ub=db>=14?0:db>=7?1:2;return ua!==ub?ua-ub:db-da});
+  }catch(e){console.error(e);state.clients=[];}
+  state.loading=false;render();
 }
 
 // --- AUTOMATIONS ---
-async function postUpdateAndPin(itemId, body) {
-  // 1. Create update
-  const createRes = await mondayQuery(`mutation($itemId:Int!,$body:String!){create_update(item_id:$itemId,body:$body){id}}`, {itemId:Number(itemId), body});
+async function autoPostAndPin(itemId, clientName, checkedItems) {
+  const now = fmtDate(new Date().toISOString());
+  const doneTasks = ALL_IDS.filter(id=>checkedItems[id]).length;
+  let body = `<h3>Checklist de Onboarding — ${clientName}</h3>`;
+  body += `<p><strong>Data:</strong> ${now} | <strong>Resultado:</strong> ${doneTasks}/${ALL_IDS.length} itens</p>`;
+  SECTIONS.forEach(sec => {
+    body += `<h4>${sec.icon} ${sec.label}</h4><ul>`;
+    sec.items.forEach(item => { body += `<li>${checkedItems[item.id]?'✅':'❌'} ${item.text}</li>`; });
+    body += `</ul>`;
+  });
+
+  // 1) Create update
+  const createRes = await mondayGQL(
+    `mutation ($body: String!, $itemId: ID!) { create_update(item_id: $itemId, body: $body) { id } }`,
+    { body, itemId: String(itemId) }
+  );
   const updateId = createRes?.data?.create_update?.id;
   if (!updateId) throw new Error('Falha ao criar atualização');
-  // 2. Pin update
-  await mondayQuery(`mutation($updateId:Int!){pin_to_top(id:$updateId){id}}`, {updateId:Number(updateId)});
+
+  // 2) Pin update
+  await mondayGQL(
+    `mutation ($updateId: ID!, $itemId: ID!) { pin_to_top(id: $updateId, item_id: $itemId) { id } }`,
+    { updateId: String(updateId), itemId: String(itemId) }
+  );
   return updateId;
 }
 
-async function changeResponsible(itemId) {
-  const value = JSON.stringify({ [COL_PERSON]: { personsAndTeams: [{ id: ALINE_ID, kind: 'person' }] } });
-  await mondayQuery(`mutation($boardId:Int!,$itemId:Int!,$value:JSON!){change_multiple_column_values(board_id:$boardId,item_id:$itemId,column_values:$value){id}}`,
-    {boardId:BOARD_ID, itemId:Number(itemId), value});
+async function autoChangeResponsible(itemId) {
+  await mondayGQL(
+    `mutation ($boardId: ID!, $itemId: ID!, $value: JSON!) { change_multiple_column_values(board_id: $boardId, item_id: $itemId, column_values: $value) { id } }`,
+    { boardId: String(BOARD_ID), itemId: String(itemId), value: JSON.stringify({ person: { personsAndTeams: [{ id: ALINE_ID, kind: 'person' }] } }) }
+  );
 }
 
-async function changeNextAction(itemId, label) {
-  const value = JSON.stringify({ [COL_NEXT_ACTION]: { label } });
-  await mondayQuery(`mutation($boardId:Int!,$itemId:Int!,$value:JSON!){change_multiple_column_values(board_id:$boardId,item_id:$itemId,column_values:$value){id}}`,
-    {boardId:BOARD_ID, itemId:Number(itemId), value});
+async function autoChangeNextAction(itemId) {
+  await mondayGQL(
+    `mutation ($boardId: ID!, $itemId: ID!, $value: JSON!) { change_multiple_column_values(board_id: $boardId, item_id: $itemId, column_values: $value) { id } }`,
+    { boardId: String(BOARD_ID), itemId: String(itemId), value: JSON.stringify({ status_1: { label: 'Cobrar Form ou Fotos' } }) }
+  );
 }
 
-async function moveToProduction(itemId) {
-  await mondayQuery(`mutation($itemId:Int!,$groupId:String!){move_item_to_group(item_id:$itemId,group_id:$groupId){id}}`,
-    {itemId:Number(itemId), groupId:PRODUCTION_GROUP});
+async function autoMoveToProduction(itemId) {
+  await mondayGQL(
+    `mutation ($itemId: ID!, $groupId: String!) { move_item_to_group(item_id: $itemId, group_id: $groupId) { id } }`,
+    { itemId: String(itemId), groupId: PRODUCTION_GROUP }
+  );
 }
 
-// --- RUN ALL AUTOMATIONS ---
 async function runAutomations(itemId, clientName, checkedItems) {
-  state.automating = true;
-  state.autoStatus = { update:'running', person:'pending', status:'pending', move:'pending' };
+  state.automating=true;
+  state.autoStatus={update:'running',person:'pending',status:'pending',move:'pending'};
   render();
 
-  // Build update body
-  const now = new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  const doneTasks = ALL_IDS.filter(id => checkedItems[id]);
-  const missedTasks = ALL_IDS.filter(id => !checkedItems[id]);
-  let html = `<h3>Checklist de Onboarding — ${esc(clientName)}</h3>`;
-  html += `<p><strong>Data:</strong> ${now} | <strong>Resultado:</strong> ${doneTasks.length}/${ALL_IDS.length} itens concluídos</p>`;
-  SECTIONS.forEach(sec => {
-    html += `<h4>${sec.icon} ${sec.label}</h4><ul>`;
-    sec.items.forEach(item => {
-      const ok = checkedItems[item.id];
-      html += `<li>${ok ? '✅' : '❌'} ${esc(item.text)}</li>`;
-    });
-    html += `</ul>`;
-  });
+  const steps = [
+    { key:'update', fn: () => autoPostAndPin(itemId, clientName, checkedItems) },
+    { key:'person', fn: () => autoChangeResponsible(itemId) },
+    { key:'status', fn: () => autoChangeNextAction(itemId) },
+    { key:'move',   fn: () => autoMoveToProduction(itemId) },
+  ];
 
-  try {
-    // 1. Post & pin update
-    await postUpdateAndPin(itemId, html);
-    state.autoStatus.update = 'done';
-    state.autoStatus.person = 'running'; render();
-
-    // 2. Change responsible
-    await changeResponsible(itemId);
-    state.autoStatus.person = 'done';
-    state.autoStatus.status = 'running'; render();
-
-    // 3. Change next action
-    await changeNextAction(itemId, 'Cobrar Form ou Fotos');
-    state.autoStatus.status = 'done';
-    state.autoStatus.move = 'running'; render();
-
-    // 4. Move to production
-    await moveToProduction(itemId);
-    state.autoStatus.move = 'done'; render();
-
-    showToast('✅ Onboarding finalizado! Todas as ações executadas no Monday.');
-  } catch(e) {
-    console.error('Automation error:', e);
-    const running = Object.keys(state.autoStatus).find(k => state.autoStatus[k] === 'running');
-    if (running) state.autoStatus[running] = 'error';
-    showToast('⚠️ Erro em uma das automações. Verifique o Monday.');
-    render();
+  let allOk = true;
+  for (const step of steps) {
+    state.autoStatus[step.key] = 'running'; render();
+    try {
+      await step.fn();
+      state.autoStatus[step.key] = 'done'; render();
+    } catch(e) {
+      console.error(`Erro em ${step.key}:`, e);
+      state.autoStatus[step.key] = 'error';
+      allOk = false;
+      render();
+      break;
+    }
   }
 
   state.automating = false;
+  if (allOk) showToast('✅ Onboarding finalizado! Todas as ações executadas no Monday.');
+  else showToast('⚠️ Erro em uma das automações. Verifique o Monday.');
 }
 
 // ============================================================
 // RENDER
 // ============================================================
-function render() {
-  const app = document.getElementById('app');
-  const sel = state.clients.find(c=>c.id===state.selectedId);
-  const done = ALL_IDS.filter(id=>state.checked[id]).length;
-  const total = ALL_IDS.length;
-  const progress = total>0?done/total:0;
-  let h = '';
+function render(){
+  const app=document.getElementById('app');
+  const sel=state.clients.find(c=>c.id===state.selectedId);
+  const done=ALL_IDS.filter(id=>state.checked[id]).length,total=ALL_IDS.length,progress=total>0?done/total:0;
+  let h='';
 
-  // Header
-  h += `<div class="header"><div><div class="mono" style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:4px">Método 3A</div><h1 style="font-size:22px;font-weight:700;line-height:1.2">Checklist de Onboarding</h1></div><div class="tabs"><button class="tab ${state.view==='checklist'?'active':''}" onclick="setView('checklist')">Checklist</button><button class="tab ${state.view==='history'?'active':''}" onclick="setView('history')">Histórico${state.history.length>0?`<span class="badge mono">${state.history.length}</span>`:''}</button></div></div>`;
+  h+=`<div class="header"><div><div class="mono" style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-bottom:4px">Método 3A</div><h1 style="font-size:22px;font-weight:700;line-height:1.2">Checklist de Onboarding</h1></div><div class="tabs"><button class="tab ${state.view==='checklist'?'active':''}" onclick="setView('checklist')">Checklist</button><button class="tab ${state.view==='history'?'active':''}" onclick="setView('history')">Histórico${state.history.length>0?`<span class="badge mono">${state.history.length}</span>`:''}</button></div></div>`;
 
-  if (state.view==='checklist') {
-    if (!state.started) {
-      if (state.loading) {
-        h += `<div style="text-align:center;padding:40px"><div class="loading-spinner"></div><div style="font-size:13px;color:var(--t2)">Carregando clientes...</div></div>`;
-      } else if (state.clients.length===0) {
-        h += `<div class="empty"><div style="font-size:40px;margin-bottom:16px">🚀</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">Checklist de Onboarding</div><div style="font-size:14px;color:var(--t2);margin-bottom:24px">Carregue os clientes do Monday para começar</div><button class="btn-start new" style="padding:10px 24px;font-size:14px" onclick="fetchClients()">Carregar Clientes do Monday</button></div>`;
-      } else {
-        const cc=state.clients.filter(c=>getUrg(getDaysIn(c.created))==='critical').length;
-        const wc=state.clients.filter(c=>getUrg(getDaysIn(c.created))==='warning').length;
+  if(state.view==='checklist'){
+    if(!state.started){
+      if(state.loading){h+=`<div style="text-align:center;padding:40px"><div class="loading-spinner"></div><div style="font-size:13px;color:var(--t2)">Carregando clientes...</div></div>`}
+      else if(state.clients.length===0){h+=`<div class="empty"><div style="font-size:40px;margin-bottom:16px">🚀</div><div style="font-size:17px;font-weight:700;margin-bottom:6px">Checklist de Onboarding</div><div style="font-size:14px;color:var(--t2);margin-bottom:24px">Carregue os clientes do Monday para começar</div><button class="btn-start new" style="padding:10px 24px;font-size:14px" onclick="fetchClients()">Carregar Clientes do Monday</button></div>`}
+      else{
+        const cc=state.clients.filter(c=>getUrg(getDaysIn(c.created))==='critical').length,wc=state.clients.filter(c=>getUrg(getDaysIn(c.created))==='warning').length;
         if(cc>0||wc>0){h+=`<div class="alert-bar">`;if(cc>0)h+=`<div class="alert-pill alert-red">🔴 ${cc} ${cc===1?'cliente':'clientes'} há +2 semanas</div>`;if(wc>0)h+=`<div class="alert-pill alert-yellow">🟡 ${wc} ${wc===1?'cliente':'clientes'} há +1 semana</div>`;h+=`</div>`}
         h+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div class="mono" style="font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:1px">🚀 Onboarding (${state.clients.length})</div><button class="btn-refresh" onclick="fetchClients()">🔄 Atualizar</button></div>`;
         h+=`<div class="client-list">`;
-        state.clients.forEach(c=>{
-          const days=getDaysIn(c.created),urg=getUrg(days),dc=getDraftCount(c.id),hd=dc>0;
+        state.clients.forEach(c=>{const days=getDaysIn(c.created),urg=getUrg(days),dc=getDraftCount(c.id),hd=dc>0;
           h+=`<div class="client-card ${urg}"><div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span>${esc(c.name)}</span>${urg!=='ok'?`<span class="urg-badge ${urg} mono">${days}d</span>`:''}${hd?`<span class="draft-badge mono">✏️ ${dc}/${total}</span>`:''}</div><div class="mono" style="font-size:11px;color:var(--t2);margin-top:3px;display:flex;flex-wrap:wrap;gap:0 8px"><span>R$${c.value}/mês</span><span>·</span><span>Desde ${fmtShort(c.created)}</span><span>·</span><span>${esc(c.nextAction)}</span></div></div><div style="display:flex;gap:6px;flex-shrink:0">${c.chat?`<a href="${esc(c.chat)}" target="_blank" rel="noopener noreferrer" class="btn-chat" title="Conversa no Kommo">💬</a>`:''}<button class="btn-start ${hd?'draft':'new'}" onclick="startChecklist('${c.id}')">${hd?'Continuar ▶':'Iniciar ▶'}</button></div></div>`;
         });
         h+=`</div><div class="mono" style="margin-top:14px;font-size:11px;color:var(--t2);text-align:center">Clique em Atualizar para puxar dados frescos do Monday</div>`;
       }
-    } else {
-      // Active checklist
+    }else{
       const days=sel?getDaysIn(sel.created):0,urg=getUrg(days);
       h+=`<div class="active-header ${urg}"><div style="flex:1"><div class="mono" style="font-size:11px;color:var(--t2);font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2px">Cliente</div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:18px;font-weight:700">${sel?esc(sel.name):'—'}</span>${urg!=='ok'?`<span class="urg-badge ${urg} mono">${days}d</span>`:''}${sel?.chat?`<a href="${esc(sel.chat)}" target="_blank" rel="noopener noreferrer" style="font-size:14px;text-decoration:none;padding:2px 6px;border-radius:5px;border:1px solid var(--bdr);color:var(--t2)">💬</a>`:''}</div><div class="mono" style="font-size:11px;color:var(--t2);margin-top:2px">ID: ${state.selectedId} · R$${sel?sel.value:'—'}/mês</div><div class="mono" style="font-size:12px;color:var(--t2);margin-top:2px">${done}/${total} concluídos</div></div>${ringSVG(progress)}</div>`;
-
-      SECTIONS.forEach(sec=>{
-        const sd=sec.items.filter(i=>state.checked[i.id]).length,st=sec.items.length;
+      SECTIONS.forEach(sec=>{const sd=sec.items.filter(i=>state.checked[i.id]).length,st=sec.items.length;
         h+=`<div class="section"><div class="section-header"><div class="section-label mono"><span>${sec.icon}</span><span>${sec.label}</span></div><span class="section-count ${sd===st?'done':''} mono">${sd}/${st}</span></div><div class="check-items">`;
         sec.items.forEach(item=>{const ic=!!state.checked[item.id];h+=`<button class="check-item ${ic?'checked':''}" onclick="toggleItem('${item.id}')"><span class="check-box">${ic?'✓':''}</span><span class="check-text">${esc(item.text)}</span></button>`});
         h+=`</div></div>`;
       });
 
-      // Automation panel (shows when finishing)
-      if (state.automating || Object.keys(state.autoStatus).length > 0 && state.autoStatus.update) {
-        const autoItems = [
-          { key:'update', label:'Postar checklist na Atualização e fixar' },
-          { key:'person', label:'Mudar responsável CS para Aline' },
-          { key:'status', label:'Mudar Próxima Ação para "Cobrar Form ou Fotos"' },
-          { key:'move', label:'Mover cliente para Grupo Produção' },
-        ];
-        h += `<div class="auto-panel"><div class="auto-title mono">⚡ Ações no Monday</div>`;
-        autoItems.forEach(ai => {
-          const st = state.autoStatus[ai.key] || 'pending';
-          const stLabel = st==='done'?'Feito':st==='running'?'Executando...':st==='error'?'Erro':'Aguardando';
-          h += `<div class="auto-item"><span class="auto-check ${st==='done'?'on':'off'}">${st==='done'?'✓':''}</span><span class="auto-label">${ai.label}</span><span class="auto-status ${st} mono">${stLabel}</span></div>`;
-        });
-        h += `</div>`;
+      if(state.automating||state.autoStatus.update){
+        const ai=[{key:'update',label:'Postar checklist na Atualização e fixar'},{key:'person',label:'Mudar responsável CS para Aline'},{key:'status',label:'Mudar Próxima Ação → "Cobrar Form ou Fotos"'},{key:'move',label:'Mover cliente para Grupo Produção'}];
+        h+=`<div class="auto-panel"><div class="mono" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">⚡ Ações no Monday</div>`;
+        ai.forEach(a=>{const st=state.autoStatus[a.key]||'pending',lb=st==='done'?'Feito':st==='running'?'Executando...':st==='error'?'Erro':'Aguardando';
+          h+=`<div class="auto-item"><span class="auto-check ${st==='done'?'on':'off'}">${st==='done'?'✓':''}</span><span style="flex:1;color:var(--t1)">${a.label}</span><span class="auto-status ${st} mono">${lb}</span></div>`;
+        });h+=`</div>`;
       }
 
       h+=`<div class="actions"><button class="btn btn-back" onclick="cancelChecklist()" ${state.automating?'disabled':''}>← Voltar</button><button class="btn btn-finish ${progress===1?'green':'amber'}" onclick="finishChecklist()" ${state.automating?'disabled':''}>${state.automating?'Executando...':progress===1?'✓ Finalizar Onboarding':`Salvar (${done}/${total} feitos)`}</button></div>`;
     }
   }
 
-  if (state.view==='history') {
+  if(state.view==='history'){
     if(state.history.length===0){h+=`<div class="empty"><div style="font-size:36px;margin-bottom:12px;opacity:.5">📭</div><div style="font-size:14px;color:var(--t2)">Nenhum onboarding registrado ainda.</div></div>`}
     else{h+=`<div class="history-list">`;state.history.forEach((entry,idx)=>{
       const pct=entry.total>0?entry.completed/entry.total:0,isOk=pct===1,isExp=state.expanded===idx;
@@ -351,8 +312,7 @@ function render() {
       h+=`</div>`;
     });h+=`</div>`}
   }
-
-  app.innerHTML = h;
+  app.innerHTML=h;
 }
 
 // ============================================================
@@ -365,29 +325,18 @@ function toggleItem(id){state.checked[id]=!state.checked[id];if(state.selectedId
 function toggleExpand(i){state.expanded=state.expanded===i?null:i;render()}
 function deleteEntry(i){state.history.splice(i,1);saveHistoryLS();if(state.expanded===i)state.expanded=null;render()}
 
-async function finishChecklist() {
-  const sel = state.clients.find(c=>c.id===state.selectedId);
-  const done = ALL_IDS.filter(id=>state.checked[id]).length;
+async function finishChecklist(){
+  const sel=state.clients.find(c=>c.id===state.selectedId);
+  const done=ALL_IDS.filter(id=>state.checked[id]).length;
+  const entry={client:sel?.name||'—',clientId:state.selectedId,date:new Date().toISOString(),completed:done,total:ALL_IDS.length,items:{...state.checked}};
+  state.history.unshift(entry);saveHistoryLS();
 
-  // Save to history
-  const entry = { client:sel?.name||'—', clientId:state.selectedId, date:new Date().toISOString(), completed:done, total:ALL_IDS.length, items:{...state.checked} };
-  state.history.unshift(entry);
-  saveHistoryLS();
+  await runAutomations(state.selectedId,sel?.name||'—',state.checked);
 
-  // Run Monday automations
-  await runAutomations(state.selectedId, sel?.name||'—', state.checked);
-
-  // Cleanup
-  if(state.selectedId) deleteDraft(state.selectedId);
-
-  // Small delay so user can see the completed status
-  setTimeout(() => {
-    state.started=false; state.selectedId=null; state.checked={}; state.autoStatus={};
-    render();
-  }, 2000);
+  if(state.selectedId)deleteDraft(state.selectedId);
+  setTimeout(()=>{state.started=false;state.selectedId=null;state.checked={};state.autoStatus={};render()},2500);
 }
 
-// Init
 render();
 </script>
 </body>
