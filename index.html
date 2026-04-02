@@ -213,9 +213,28 @@ async function autoChangeResponsible(itemId){await mondayGQL(`mutation($boardId:
 async function autoChangeNextAction(itemId){await mondayGQL(`mutation($boardId:ID!,$itemId:ID!,$value:JSON!){change_multiple_column_values(board_id:$boardId,item_id:$itemId,column_values:$value){id}}`,{boardId:String(BOARD_ID),itemId:String(itemId),value:JSON.stringify({status_1:{label:'Cobrar Form ou fotos'}})});}
 async function autoMoveToProduction(itemId){await mondayGQL(`mutation($itemId:ID!,$groupId:String!){move_item_to_group(item_id:$itemId,group_id:$groupId){id}}`,{itemId:String(itemId),groupId:PRODUCTION_GROUP});}
 
+const WEBHOOK_URL='https://webhook.metodo3amedico.com.br/webhook/kommo-onboarding';
+async function autoSendWebhook(itemId,clientName){
+  const sel=state.clients.find(c=>c.id===itemId);
+  // Extract Kommo lead ID from chat URL
+  let kommoLeadId='';
+  if(sel&&sel.chat){const match=sel.chat.match(/\/detail\/(\d+)/);if(match)kommoLeadId=match[1];}
+  const keyItems=['d4','d5','d6','d7'];
+  const data={
+    clientId:itemId,
+    clientName:clientName,
+    kommoLeadId:kommoLeadId,
+    kommoUrl:sel?.chat||'',
+    date:new Date().toISOString(),
+    items:{}
+  };
+  keyItems.forEach(id=>{const item=ALL_ITEMS.find(i=>i.id===id);if(item)data.items[item.text]=state.values[id]||'';});
+  await fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+}
+
 async function runAutomations(itemId,clientName){
-  state.automating=true;state.autoStatus={update:'running',person:'pending',status:'pending',move:'pending'};render();
-  const steps=[{key:'update',fn:()=>autoPostAndPin(itemId,clientName)},{key:'person',fn:()=>autoChangeResponsible(itemId)},{key:'status',fn:()=>autoChangeNextAction(itemId)},{key:'move',fn:()=>autoMoveToProduction(itemId)}];
+  state.automating=true;state.autoStatus={update:'running',person:'pending',status:'pending',move:'pending',webhook:'pending'};render();
+  const steps=[{key:'update',fn:()=>autoPostAndPin(itemId,clientName)},{key:'person',fn:()=>autoChangeResponsible(itemId)},{key:'status',fn:()=>autoChangeNextAction(itemId)},{key:'move',fn:()=>autoMoveToProduction(itemId)},{key:'webhook',fn:()=>autoSendWebhook(itemId,clientName)}];
   let allOk=true;
   for(const step of steps){state.autoStatus[step.key]='running';render();try{await step.fn();state.autoStatus[step.key]='done';render();}catch(e){console.error(`Erro em ${step.key}:`,e);state.autoStatus[step.key]='error';allOk=false;render();break;}}
   state.automating=false;
@@ -280,7 +299,7 @@ function render(){
 
       // Automation panel
       if(state.automating||state.autoStatus.update){
-        const ai=[{key:'update',label:'Postar checklist na Atualização e fixar'},{key:'person',label:'Mudar responsável CS para Aline'},{key:'status',label:'Mudar Próxima Ação → "Cobrar Form ou fotos"'},{key:'move',label:'Mover cliente para Grupo Produção'}];
+        const ai=[{key:'update',label:'Postar resumo na Atualização e fixar'},{key:'person',label:'Mudar responsável CS para Aline'},{key:'status',label:'Mudar Próxima Ação → "Cobrar Form ou fotos"'},{key:'move',label:'Mover cliente para Grupo Produção'},{key:'webhook',label:'Enviar dados via Webhook'}];
         h+=`<div class="auto-panel"><div class="mono" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px">⚡ Ações no Monday</div>`;
         ai.forEach(a=>{const st=state.autoStatus[a.key]||'pending',lb=st==='done'?'Feito':st==='running'?'Executando...':st==='error'?'Erro':'Aguardando';h+=`<div class="auto-item"><span class="auto-check ${st==='done'?'on':'off'}">${st==='done'?'✓':''}</span><span style="flex:1;color:var(--t1)">${a.label}</span><span class="auto-status ${st} mono">${lb}</span></div>`;});
         h+=`</div>`;
