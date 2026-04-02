@@ -193,25 +193,17 @@ async function fetchClients(){
 // AUTOMATIONS
 async function autoPostAndPin(itemId,clientName){
   const now=fmtDate(new Date().toISOString());
-  const doneCount=ALL_ITEMS.filter(i=>isItemDone(i,state.checked,state.values)).length;
-  let body=`<h3>Checklist de Onboarding — ${clientName}</h3>`;
-  body+=`<p><strong>Data:</strong> ${now} | <strong>Resultado:</strong> ${doneCount}/${ALL_ITEMS.length} itens</p>`;
-  SECTIONS.forEach(sec=>{
-    body+=`<h4>${sec.icon} ${sec.label}</h4><ul>`;
-    sec.items.forEach(item=>{
-      const done=isItemDone(item,state.checked,state.values);
-      if(item.type==='check'){
-        body+=`<li>${done?'✅':'❌'} ${item.text}</li>`;
-      }else if(item.type==='text'){
-        const val=state.values[item.id]||'';
-        body+=`<li>${done?'✅':'❌'} <strong>${item.text}:</strong> ${val||'(não preenchido)'}</li>`;
-      }else if(item.type==='select'){
-        const val=state.values[item.id]||'';
-        body+=`<li>${done?'✅':'❌'} <strong>${item.text}:</strong> ${val||'(não selecionado)'}</li>`;
-      }
-    });
-    body+=`</ul>`;
+  // Only post the key info items (select + text fields)
+  const keyItems=['d4','d5','d6','d7'];
+  let body=`<h3>Resumo Onboarding — ${clientName}</h3>`;
+  body+=`<p><strong>Data:</strong> ${now}</p><ul>`;
+  keyItems.forEach(id=>{
+    const item=ALL_ITEMS.find(i=>i.id===id);
+    if(!item)return;
+    const val=state.values[id]||'';
+    body+=`<li><strong>${item.text}:</strong> ${val||'(não preenchido)'}</li>`;
   });
+  body+=`</ul>`;
   const createRes=await mondayGQL(`mutation($body:String!,$itemId:ID!){create_update(item_id:$itemId,body:$body){id}}`,{body,itemId:String(itemId)});
   const updateId=createRes?.data?.create_update?.id;
   if(!updateId)throw new Error('Falha ao criar atualização');
