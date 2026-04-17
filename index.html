@@ -125,6 +125,7 @@ const SECTIONS=[
     {id:'d5',type:'select',text:'Hospedagem',options:['M3A','Própria (Usaremos Wordpress)','A decidir']},
     {id:'d6',type:'text',text:'GMN — Tem? Alguma observação?',placeholder:'Ex: Sim, já tem perfil ativo / Não tem, criar do zero...'},
     {id:'d7',type:'text',text:'Verba mensal combinada para tráfego',placeholder:'Ex: R$1.500/mês'},
+    {id:'d8',type:'optional_text',text:'Observações',placeholder:'Alguma observação relevante sobre o onboarding...'},
   ]},
   {key:'after',label:'Pós Reunião',icon:'✅',items:[
     {id:'a4',type:'check',text:'Anexado Transcript Fathom no Monday'},
@@ -157,6 +158,7 @@ function isItemDone(item,checked,values){
   if(item.type==='check')return !!checked[item.id];
   if(item.type==='text')return !!(values[item.id]&&values[item.id].trim());
   if(item.type==='select')return !!(values[item.id]);
+  if(item.type==='optional_text')return true;
   return false;
 }
 
@@ -201,6 +203,9 @@ async function autoPostAndPin(itemId,clientName){
     body+=`<li><strong>${item.text}:</strong> ${val||'(não preenchido)'}</li>`;
   });
   body+=`</ul>`;
+  // Add Observações if filled
+  const obs=state.values['d8']||'';
+  if(obs.trim())body+=`<p><strong>Observações:</strong> ${obs}</p>`;
   const createRes=await mondayGQL(`mutation($body:String!,$itemId:ID!){create_update(item_id:$itemId,body:$body){id}}`,{body,itemId:String(itemId)});
   const updateId=createRes?.data?.create_update?.id;
   if(!updateId)throw new Error('Falha ao criar atualização');
@@ -226,6 +231,9 @@ async function autoSendWebhook(itemId,clientName){
     items:{}
   };
   keyItems.forEach(id=>{const item=ALL_ITEMS.find(i=>i.id===id);if(item)data.items[item.text]=state.values[id]||'';});
+  // Add Observações if filled
+  const obs=state.values['d8']||'';
+  if(obs.trim())data.observacoes=obs;
   await fetch(WEBHOOK_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
 }
 
@@ -289,6 +297,10 @@ function render(){
               h+=`<button class="select-opt ${val===opt?'selected':''}" onclick="setItemValue('${item.id}','${esc(opt)}')">${esc(opt)}</button>`;
             });
             h+=`</div></div>`;
+          }else if(item.type==='optional_text'){
+            const val=state.values[item.id]||'';
+            const filled=val.trim().length>0;
+            h+=`<div class="input-item ${filled?'filled':''}"><div class="input-item-label"><span>${esc(item.text)}</span><span class="mono" style="font-size:10px;color:var(--t2);font-weight:600;letter-spacing:0.5px">opcional</span></div><input type="text" value="${esc(val)}" placeholder="${esc(item.placeholder||'')}" oninput="setItemValue('${item.id}',this.value)" class="${filled?'has-value':''}"/></div>`;
           }
         });
         h+=`</div></div>`;
@@ -340,7 +352,7 @@ function setItemValue(id,val){
   else{state.values[id]=val;}
   if(state.selectedId)saveDraft(state.selectedId);render();
   // Keep focus on text inputs
-  if(item&&item.type==='text'){setTimeout(()=>{const inp=document.querySelector(`input[oninput*="'${id}'"]`);if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);}},0);}
+  if(item&&(item.type==='text'||item.type==='optional_text')){setTimeout(()=>{const inp=document.querySelector(`input[oninput*="'${id}'"]`);if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);}},0);}
 }
 function toggleExpand(i){state.expanded=state.expanded===i?null:i;render()}
 function deleteEntry(i){state.history.splice(i,1);saveHistoryLS();if(state.expanded===i)state.expanded=null;render()}
