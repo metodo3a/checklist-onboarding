@@ -166,7 +166,7 @@ function getDaysIn(c){return Math.floor((new Date()-new Date(c+'T00:00:00'))/864
 function getUrg(d){return d>=14?'critical':d>=7?'warning':'ok'}
 function fmtDate(i){return new Date(i).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})}
 function fmtShort(d){return new Date(d+'T00:00:00').toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})}
-function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML.replace(/"/g,'&quot;')}
 function showToast(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3500)}
 
 function ringSVG(p,sz){
@@ -288,7 +288,7 @@ function render(){
           }else if(item.type==='text'){
             const val=state.values[item.id]||'';
             const filled=val.trim().length>0;
-            h+=`<div class="input-item ${filled?'filled':''}"><div class="input-item-label"><span>${esc(item.text)}</span><span class="req">obrigatório</span></div><input type="text" value="${esc(val)}" placeholder="${esc(item.placeholder||'Preencha...')}" oninput="setItemValue('${item.id}',this.value)" class="${filled?'has-value':''}"/></div>`;
+            h+=`<div class="input-item ${filled?'filled':''}"><div class="input-item-label"><span>${esc(item.text)}</span><span class="req">obrigatório</span></div><input type="text" value="${esc(val)}" placeholder="${esc(item.placeholder||'Preencha...')}" oninput="setItemValue('${item.id}',this.value)" onblur="onTextBlur('${item.id}')" class="${filled?'has-value':''}"/></div>`;
           }else if(item.type==='select'){
             const val=state.values[item.id]||'';
             const filled=!!val;
@@ -300,7 +300,7 @@ function render(){
           }else if(item.type==='optional_text'){
             const val=state.values[item.id]||'';
             const filled=val.trim().length>0;
-            h+=`<div class="input-item ${filled?'filled':''}"><div class="input-item-label"><span>${esc(item.text)}</span><span class="mono" style="font-size:10px;color:var(--t2);font-weight:600;letter-spacing:0.5px">opcional</span></div><input type="text" value="${esc(val)}" placeholder="${esc(item.placeholder||'')}" oninput="setItemValue('${item.id}',this.value)" class="${filled?'has-value':''}"/></div>`;
+            h+=`<div class="input-item ${filled?'filled':''}"><div class="input-item-label"><span>${esc(item.text)}</span><span class="mono" style="font-size:10px;color:var(--t2);font-weight:600;letter-spacing:0.5px">opcional</span></div><input type="text" value="${esc(val)}" placeholder="${esc(item.placeholder||'')}" oninput="setItemValue('${item.id}',this.value)" onblur="onTextBlur('${item.id}')" class="${filled?'has-value':''}"/></div>`;
           }
         });
         h+=`</div></div>`;
@@ -346,13 +346,16 @@ function startChecklist(cid){
 function cancelChecklist(){state.started=false;state.selectedId=null;state.checked={};state.values={};state.autoStatus={};render()}
 function toggleItem(id){state.checked[id]=!state.checked[id];if(state.selectedId)saveDraft(state.selectedId);render()}
 function setItemValue(id,val){
-  // For select: toggle off if clicking the same option
   const item=ALL_ITEMS.find(i=>i.id===id);
   if(item&&item.type==='select'&&state.values[id]===val){state.values[id]='';}
   else{state.values[id]=val;}
-  if(state.selectedId)saveDraft(state.selectedId);render();
-  // Keep focus on text inputs
-  if(item&&(item.type==='text'||item.type==='optional_text')){setTimeout(()=>{const inp=document.querySelector(`input[oninput*="'${id}'"]`);if(inp){inp.focus();inp.setSelectionRange(inp.value.length,inp.value.length);}},0);}
+  if(state.selectedId)saveDraft(state.selectedId);
+  // Only re-render for select (not text inputs — re-render breaks accent composition)
+  if(item&&item.type==='select')render();
+}
+function onTextBlur(id){
+  // Re-render on blur to update section counts and button state
+  render();
 }
 function toggleExpand(i){state.expanded=state.expanded===i?null:i;render()}
 function deleteEntry(i){state.history.splice(i,1);saveHistoryLS();if(state.expanded===i)state.expanded=null;render()}
